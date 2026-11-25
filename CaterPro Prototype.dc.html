@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f6f5f1;font-family:'Nunito Sans',system-ui,sans-serif;color:#1c1f1a;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#1f6b2b;text-decoration:none}a:hover{color:#17521f;text-decoration:underline}
+button,input,select,textarea{font-family:inherit}
+@keyframes cpIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes cpUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="display:flex;height:100vh;overflow:hidden;background:#f6f5f1">
+  <aside style="width:272px;flex:none;background:#fff;border-right:1px solid #ebe9e3;display:flex;flex-direction:column;padding:18px 14px 24px;overflow-y:auto">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:20px;background:linear-gradient(110deg,#1f6b2b 0%,#2a7d33 70%,#3b8a40 100%);box-shadow:0 6px 16px rgba(31,107,43,.25);color:#fff">
+      <div style="width:48px;height:48px;flex:none;border-radius:14px;background:#17521f;border:1.5px solid rgba(255,255,255,.45);display:grid;place-items:center;font:600 22px Lexend">D</div>
+      <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+        <div style="font:600 17px/1.15 Lexend">Dapur Lestari</div>
+        <div style="font-size:13px;color:#ecd27a">CaterPro · Web</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;margin-top:12px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <sc-if value="{{ g.hasLabel }}">
+            <div style="font-weight:800;font-size:12px;letter-spacing:.13em;color:#6b6f66;padding:20px 14px 8px">{{ g.label }}</div>
+          </sc-if>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+            <button onClick="{{ it.onClick }}" style="display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:12px;border:1.5px solid {{ it.border }};background:{{ it.bg }};color:{{ it.color }};font-size:15.5px;font-weight:{{ it.fw }};cursor:pointer;text-align:left;width:100%">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="{{ it.icon }}"></path></svg>
+              <span style="flex:1">{{ it.label }}</span>
+              <sc-if value="{{ it.hasBadge }}"><span style="min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:#f5e2b8;color:#8a5a00;font-size:12px;font-weight:800;display:grid;place-items:center">{{ it.badge }}</span></sc-if>
+              <sc-if value="{{ it.disabled }}"><span style="padding:2px 7px;border-radius:6px;background:#f1f0ec;color:#8b8e85;font-size:11px;font-weight:800">P1</span></sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </aside>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <header style="height:84px;flex:none;background:#fff;border-bottom:1px solid #ebe9e3;display:flex;align-items:center;gap:16px;padding:0 24px;min-width:0">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2a2e27" stroke-width="1.8" stroke-linecap="round" style="flex:none"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      <div style="flex:1 1 auto;min-width:0;max-width:640px;display:flex;align-items:center;gap:12px;height:50px;padding:0 10px 0 18px;border:1.5px solid #e3e1da;border-radius:26px;background:#fff">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2a2e27" stroke-width="1.8" stroke-linecap="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5"></path></svg>
+        <input placeholder="Cari pelanggan, order, quotation…" style="flex:1;min-width:0;width:100%;border:none;outline:none;font-size:16px;background:transparent;color:#1c1f1a">
+        <span style="flex:none;white-space:nowrap;padding:5px 9px;border-radius:8px;background:#f1f0ec;font-size:12px;font-weight:700;color:#55594f">⌘ K</span>
+      </div>
+      <div style="flex:1 1 0;min-width:0"></div>
+      <div style="display:flex;align-items:center;gap:20px;color:#2a2e27;flex:none">
+        <button onClick="{{ goWa }}" style="position:relative;background:none;border:none;padding:0;cursor:pointer;color:inherit"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg><span style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:#2e8136"></span></button>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"></path></svg>
+        <button onClick="{{ goDash }}" style="position:relative;background:none;border:none;padding:0;cursor:pointer;color:inherit"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg><sc-if value="{{ hasAlerts }}"><span style="position:absolute;top:-6px;right:-8px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#c8402f;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center">{{ alertCount }}</span></sc-if></button>
+      </div>
+      <div style="width:1px;height:40px;background:#e3e1da;flex:none"></div>
+      <div style="display:flex;align-items:center;gap:12px;flex:0 1 auto;min-width:0">
+        <div style="width:50px;height:50px;flex:none;border-radius:50%;background:#f6ecd6;color:#9a6b00;display:grid;place-items:center;font:600 17px Lexend">RL</div>
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden">
+          <div style="font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ratna@dapurlestari.id</div>
+          <div style="font-size:14px;color:#6b6f66">Owner</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2a2e27" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg>
+      </div>
+    </header>
+
+    <main style="flex:1;overflow-y:auto;padding:28px 32px 56px">
+      <div style="max-width:1440px;margin:0 auto;display:flex;flex-direction:column;gap:28px">
+
+        <sc-if value="{{ is.dash }}" hint-placeholder-val="{{ true }}">
+          <div data-screen-label="Dashboard" style="display:flex;flex-direction:column;gap:28px">
+            <section style="position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(100deg,#2e8136 0%,#226d2b 50%,#1b5b23 100%);padding:44px 48px 48px;color:#fff">
+              <div style="position:absolute;right:-160px;top:-260px;width:820px;height:820px;border-radius:50%;border:2px solid rgba(236,210,122,.13)"></div>
+              <div style="position:absolute;right:160px;top:-360px;width:820px;height:820px;border-radius:50%;border:2px solid rgba(255,255,255,.06)"></div>
+              <div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+                <div style="display:flex;flex-direction:column;gap:14px;max-width:720px">
+                  <div style="font-weight:800;font-size:14px;letter-spacing:.14em;color:#ecd27a">SELASA, 24 NOVEMBER 2026</div>
+                  <h1 style="margin:0;font:600 40px/1.1 Lexend;letter-spacing:-.01em">Selamat pagi, Bu Ratna</h1>
+                  <p style="margin:0;font-size:18px;line-height:1.5;color:rgba(255,255,255,.9);text-wrap:pretty">{{ heroSub }}</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button onClick="{{ openNewLead }}" style="padding:12px 18px;border-radius:12px;border:none;background:#fff;color:#1f6b2b;font-weight:800;font-size:15px;cursor:pointer">+ Lead baru</button>
+                  <button onClick="{{ newQuote }}" style="padding:12px 18px;border-radius:12px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;font-weight:800;font-size:15px;cursor:pointer">Buat quotation</button>
+                </div>
+              </div>
+            </section>
+
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+                <h2 style="margin:0;font:600 24px Lexend">Perlu tindakan</h2>
+                <span style="font-weight:700;font-size:15px;color:{{ actionColor }}">{{ actionSummary }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+                <sc-for list="{{ actionCards }}" as="c" hint-placeholder-count="5">
+                  <button onClick="{{ c.onClick }}" style="text-align:left;display:flex;gap:16px;align-items:flex-start;padding:22px;background:#fff;border:1px solid #ebe9e3;border-radius:18px;box-shadow:0 1px 2px rgba(0,0,0,.04);cursor:pointer;color:inherit" style-hover="border-color:#b5d8ae;box-shadow:0 6px 18px rgba(31,107,43,.08)">
+                    <div style="width:44px;height:44px;flex:none;border-radius:12px;background:{{ c.iconBg }};color:{{ c.iconFg }};display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.icon }}"></path></svg></div>
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="font:600 34px/1 Lexend;color:{{ c.numFg }}">{{ c.n }}</div>
+                      <div style="font-weight:700;font-size:16px;margin-top:6px">{{ c.title }}</div>
+                      <div style="font-size:14px;color:#6b6f66;line-height:1.4">{{ c.sub }}</div>
+                    </div>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+              <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+                <div style="padding:22px 24px;background:#fff;border:1px solid #ebe9e3;border-radius:18px;display:flex;flex-direction:column;gap:8px">
+                  <div style="font-size:14px;font-weight:700;color:#6b6f66">{{ k.label }}</div>
+                  <div style="font:600 28px/1.1 Lexend">{{ k.value }}</div>
+                  <div style="font-size:13.5px;color:{{ k.subFg }};font-weight:700">{{ k.sub }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+              <div style="flex:2 1 560px;min-width:0;background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow:hidden">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:24px 28px;gap:16px">
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font:600 20px Lexend">Pengiriman hari ini &amp; besok</div>
+                    <div style="font-size:15px;color:#6b6f66">{{ todaySub }}</div>
+                  </div>
+                  <button onClick="{{ goCalendar }}" style="background:none;border:none;font-weight:700;font-size:15px;color:#1c1f1a;cursor:pointer">Kalender booking →</button>
+                </div>
+                <div style="overflow-x:auto">
+                  <div style="min-width:680px">
+                    <div style="display:grid;grid-template-columns:1.2fr 1.8fr 1.3fr .6fr .7fr 1.1fr;padding:14px 28px;background:#faf9f6;border-top:1px solid #f0eee9;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                      <div>ORDER</div><div>PELANGGAN</div><div>PAKET</div><div>PAX</div><div>JAM</div><div>STATUS</div>
+                    </div>
+                    <sc-for list="{{ todayRows }}" as="r" hint-placeholder-count="3">
+                      <button onClick="{{ r.open }}" style="display:grid;grid-template-columns:1.2fr 1.8fr 1.3fr .6fr .7fr 1.1fr;align-items:center;width:100%;text-align:left;padding:16px 28px;border:none;border-top:1px solid #f0eee9;background:#fff;cursor:pointer;font-size:15px;color:#1c1f1a" style-hover="background:#fbfaf7">
+                        <div style="font-weight:700">{{ r.no }}</div>
+                        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">{{ r.customer }}</span><span style="font-size:13px;color:#6b6f66">{{ r.dateLabel }} · {{ r.event }}</span></div>
+                        <div>{{ r.pkgName }}</div>
+                        <div>{{ r.pax }}</div>
+                        <div>{{ r.time }}</div>
+                        <div><span style="display:inline-flex;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;background:{{ r.chipBg }};color:{{ r.chipFg }}">{{ r.status }}</span></div>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1 1 320px;min-width:0;background:#fff;border:1px solid #ebe9e3;border-radius:20px;padding:24px 28px;display:flex;flex-direction:column;gap:18px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div style="font:600 20px Lexend">Pipeline sales</div>
+                  <button onClick="{{ goPipe }}" style="background:none;border:none;font-weight:700;font-size:15px;cursor:pointer;color:#1c1f1a">Lihat →</button>
+                </div>
+                <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="6">
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <div style="display:flex;justify-content:space-between;font-size:14.5px"><span>{{ f.label }}</span><span style="font-weight:800">{{ f.n }}</span></div>
+                    <div style="height:8px;border-radius:4px;background:#f1f0ec;overflow:hidden"><div style="height:100%;width:{{ f.w }};background:#2e8136;border-radius:4px"></div></div>
+                  </div>
+                </sc-for>
+                <div style="font-size:14px;color:#6b6f66;border-top:1px solid #f0eee9;padding-top:14px">Konversi lead → order: <b style="color:#1f6b2b">{{ convRate }}</b></div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.pipe }}">
+          <div data-screen-label="Pipeline" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h1 style="margin:0;font:600 28px Lexend">Lead &amp; pipeline</h1>
+                <div style="font-size:15.5px;color:#6b6f66">Klik kartu untuk melihat detail, follow-up, atau memindahkan tahap.</div>
+              </div>
+              <button onClick="{{ openNewLead }}" style="padding:12px 18px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">+ Lead baru</button>
+            </div>
+            <div style="display:flex;gap:14px;overflow-x:auto;padding-bottom:12px;align-items:flex-start">
+              <sc-for list="{{ columns }}" as="col" hint-placeholder-count="7">
+                <div style="flex:0 0 260px;background:#efede7;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 6px 2px">
+                    <div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:{{ col.dot }}"></span><span style="font-weight:800;font-size:14.5px">{{ col.label }}</span></div>
+                    <span style="font-size:13px;font-weight:800;color:#55594f">{{ col.n }}</span>
+                  </div>
+                  <div style="font-size:12.5px;color:#6b6f66;padding:0 6px">{{ col.value }}</div>
+                  <sc-for list="{{ col.leads }}" as="l" hint-placeholder-count="2">
+                    <button onClick="{{ l.open }}" style="text-align:left;display:flex;flex-direction:column;gap:8px;padding:14px;background:#fff;border:1px solid #e6e4dd;border-radius:14px;cursor:pointer;color:inherit" style-hover="border-color:#b5d8ae;box-shadow:0 4px 12px rgba(0,0,0,.05)">
+                      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+                        <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:800;font-size:15px">{{ l.name }}</span><span style="font-size:13px;color:#6b6f66">{{ l.sub }}</span></div>
+                        <span style="flex:none;padding:3px 8px;border-radius:8px;font-size:12px;font-weight:800;background:{{ l.scoreBg }};color:{{ l.scoreFg }}">{{ l.score }}</span>
+                      </div>
+                      <div style="font-size:13.5px">{{ l.event }}</div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#55594f">
+                        <span>{{ l.meta }}</span>
+                        <span style="display:flex;gap:6px;align-items:center"><span style="padding:2px 7px;border-radius:6px;background:#f1f0ec;font-weight:700">{{ l.source }}</span><span style="width:24px;height:24px;border-radius:50%;background:#e9f4e6;color:#1f6b2b;display:grid;place-items:center;font-weight:800;font-size:11px">{{ l.ini }}</span></span>
+                      </div>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.cust }}">
+          <div data-screen-label="Pelanggan" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h1 style="margin:0;font:600 28px Lexend">Pelanggan</h1>
+              <div style="font-size:15.5px;color:#6b6f66">Riwayat transaksi, tier loyalty dan poin dihitung otomatis dari order selesai (Rp10.000 = 1 poin).</div>
+            </div>
+            <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow-x:auto">
+              <div style="min-width:820px">
+                <div style="display:grid;grid-template-columns:2fr 1fr 1.2fr .7fr 1.3fr 1fr .8fr;padding:14px 24px;background:#faf9f6;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                  <div>PELANGGAN</div><div>TIPE</div><div>KONTAK</div><div>ORDER</div><div>TOTAL BELANJA</div><div>TIER</div><div>POIN</div>
+                </div>
+                <sc-for list="{{ custRows }}" as="c" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:2fr 1fr 1.2fr .7fr 1.3fr 1fr .8fr;align-items:center;padding:15px 24px;border-top:1px solid #f0eee9;font-size:15px">
+                    <div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:50%;background:#e9f4e6;color:#1f6b2b;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none">{{ c.ini }}</span><span style="font-weight:700">{{ c.name }}</span></div>
+                    <div>{{ c.type }}</div>
+                    <div style="color:#55594f">{{ c.phone }}</div>
+                    <div>{{ c.count }}</div>
+                    <div style="font-weight:700">{{ c.spend }}</div>
+                    <div><span style="padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:800;background:{{ c.tierBg }};color:{{ c.tierFg }}">{{ c.tier }}</span></div>
+                    <div>{{ c.pts }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.menu }}">
+          <div data-screen-label="Menu & paket" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h1 style="margin:0;font:600 28px Lexend">Menu &amp; paket</h1>
+              <div style="font-size:15.5px;color:#6b6f66">Food cost per porsi dihitung dari recipe/BOM + waste allowance 5%.</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+              <sc-for list="{{ pkgCards }}" as="p" hint-placeholder-count="5">
+                <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="padding:3px 10px;border-radius:999px;background:#f1f0ec;font-size:12.5px;font-weight:800;color:#55594f">{{ p.cat }}</span><span style="font-size:13px;color:#6b6f66">Min. {{ p.min }} pax</span></div>
+                  <div style="display:flex;flex-direction:column;gap:4px"><div style="font:600 20px Lexend">{{ p.name }}</div><div style="font-size:14px;color:#6b6f66;line-height:1.45">{{ p.desc }}</div></div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:14px;border-radius:14px;background:#faf9f6">
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#6b6f66;font-weight:700">Harga/pax</span><span style="font-weight:800">{{ p.price }}</span></div>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#6b6f66;font-weight:700">Food cost</span><span style="font-weight:800">{{ p.cost }}</span></div>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#6b6f66;font-weight:700">Margin</span><span style="font-weight:800;color:#1f6b2b">{{ p.margin }}</span></div>
+                  </div>
+                  <div style="font-size:13px;color:#55594f;line-height:1.5"><b>BOM:</b> {{ p.bom }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.quoteList }}">
+          <div data-screen-label="Quotation" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h1 style="margin:0;font:600 28px Lexend">Quotation</h1>
+                <div style="font-size:15.5px;color:#6b6f66">Draft → kirim → disetujui customer → konversi ke order tanpa input ulang.</div>
+              </div>
+              <button onClick="{{ newQuote }}" style="padding:12px 18px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">+ Buat quotation</button>
+            </div>
+            <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow-x:auto">
+              <div style="min-width:960px">
+                <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1.3fr .6fr 1.1fr .9fr 1.2fr 1.4fr;padding:14px 24px;background:#faf9f6;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                  <div>NOMOR</div><div>PELANGGAN</div><div>PAKET</div><div>PAX</div><div>TOTAL</div><div>BERLAKU</div><div>STATUS</div><div></div>
+                </div>
+                <sc-for list="{{ quoteRows }}" as="q" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1.3fr .6fr 1.1fr .9fr 1.2fr 1.4fr;align-items:center;padding:15px 24px;border-top:1px solid #f0eee9;font-size:15px">
+                    <div style="font-weight:700">{{ q.no }}</div>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">{{ q.customer }}</span><span style="font-size:13px;color:#6b6f66">Acara {{ q.dateLabel }} · diskon {{ q.disc }}%</span></div>
+                    <div>{{ q.pkgName }}</div>
+                    <div>{{ q.pax }}</div>
+                    <div style="font-weight:700">{{ q.total }}</div>
+                    <div style="color:#55594f">{{ q.valid }}</div>
+                    <div><span style="display:inline-flex;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;background:{{ q.chipBg }};color:{{ q.chipFg }}">{{ q.status }}</span></div>
+                    <div style="display:flex;justify-content:flex-end"><button onClick="{{ q.act }}" style="padding:8px 14px;border-radius:10px;border:1.5px solid {{ q.btnBorder }};background:{{ q.btnBg }};color:{{ q.btnFg }};font-weight:800;font-size:13.5px;cursor:pointer;white-space:nowrap">{{ q.actLabel }}</button></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.quoteBuild }}">
+          <div data-screen-label="Quotation builder" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;align-items:center;gap:14px">
+              <button onClick="{{ backToQuotes }}" style="width:40px;height:40px;border-radius:12px;border:1.5px solid #dcd9d1;background:#fff;cursor:pointer;font-size:18px">←</button>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <h1 style="margin:0;font:600 28px Lexend">Quotation baru</h1>
+                <div style="font-size:15px;color:#6b6f66">Harga disimpan sebagai snapshot saat dikirim.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+              <div style="flex:3 1 520px;min-width:0;display:flex;flex-direction:column;gap:18px">
+                <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+                  <label style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:800;color:#55594f">Lead / pelanggan
+                    <select value="{{ qb.leadId }}" onChange="{{ qb.onLead }}" style="height:46px;border:1.5px solid #dcd9d1;border-radius:12px;padding:0 12px;font-size:15px;background:#fff;color:#1c1f1a">
+                      <sc-for list="{{ leadOptions }}" as="o"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+                    </select>
+                  </label>
+                  <label style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:800;color:#55594f">Tanggal acara
+                    <input type="date" value="{{ qb.date }}" onChange="{{ qb.onDate }}" style="height:46px;border:1.5px solid #dcd9d1;border-radius:12px;padding:0 12px;font-size:15px;color:#1c1f1a">
+                  </label>
+                  <label style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:800;color:#55594f">Jumlah pax
+                    <input type="number" value="{{ qb.pax }}" onChange="{{ qb.onPax }}" style="height:46px;border:1.5px solid {{ qb.paxBorder }};border-radius:12px;padding:0 12px;font-size:15px;color:#1c1f1a">
+                  </label>
+                  <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:{{ qb.capFg }};font-weight:700">{{ qb.capNote }}</div>
+                </div>
+                <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+                  <div style="font:600 18px Lexend">Paket</div>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+                    <sc-for list="{{ qb.pkgs }}" as="p" hint-placeholder-count="5">
+                      <button onClick="{{ p.onClick }}" style="text-align:left;padding:14px;border-radius:14px;border:2px solid {{ p.border }};background:{{ p.bg }};cursor:pointer;display:flex;flex-direction:column;gap:4px;color:#1c1f1a">
+                        <span style="font-size:12px;font-weight:800;color:#6b6f66">{{ p.cat }}</span>
+                        <span style="font-weight:800;font-size:15px">{{ p.name }}</span>
+                        <span style="font-size:14px;color:#1f6b2b;font-weight:700">{{ p.price }}/pax</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                  <div style="font:600 18px Lexend;margin-top:8px">Add-on</div>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <sc-for list="{{ qb.addons }}" as="a" hint-placeholder-count="4">
+                      <button onClick="{{ a.onClick }}" style="padding:10px 14px;border-radius:12px;border:1.5px solid {{ a.border }};background:{{ a.bg }};color:{{ a.fg }};font-weight:700;font-size:14px;cursor:pointer">{{ a.mark }} {{ a.label }}</button>
+                    </sc-for>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:8px">
+                    <label style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;font-weight:800;color:#55594f">Diskon: {{ qb.disc }}%
+                      <input type="range" min="0" max="20" step="1" value="{{ qb.disc }}" onChange="{{ qb.onDisc }}" style="accent-color:#1f6b2b">
+                    </label>
+                    <label style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:800;color:#55594f">Ongkos kirim (Rp)
+                      <input type="number" value="{{ qb.ship }}" onChange="{{ qb.onShip }}" style="height:46px;border:1.5px solid #dcd9d1;border-radius:12px;padding:0 12px;font-size:15px;color:#1c1f1a">
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:2 1 340px;min-width:0;position:sticky;top:0;background:#fff;border:1px solid #ebe9e3;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+                <div style="font:600 18px Lexend">Ringkasan penawaran</div>
+                <div style="font-size:14px;color:#6b6f66">{{ qb.summary }}</div>
+                <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;border-top:1px solid #f0eee9;padding-top:14px">
+                  <sc-for list="{{ qb.lines }}" as="ln" hint-placeholder-count="5">
+                    <div style="display:flex;justify-content:space-between;gap:12px"><span style="color:#55594f">{{ ln.label }}</span><span style="font-weight:700">{{ ln.value }}</span></div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #f0eee9;padding-top:14px"><span style="font-weight:800">Total</span><span style="font:600 26px Lexend">{{ qb.total }}</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:14px;padding:12px 14px;border-radius:12px;background:#faf9f6"><span>Estimasi food cost · margin</span><b style="color:{{ qb.marginFg }}">{{ qb.cost }} · {{ qb.margin }}</b></div>
+                <sc-if value="{{ qb.hasWarn }}"><div style="font-size:14px;line-height:1.45;padding:12px 14px;border-radius:12px;background:#fdf1d8;color:#7a4f00;font-weight:700">{{ qb.warn }}</div></sc-if>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button onClick="{{ qb.saveDraft }}" style="flex:1;padding:13px 16px;border-radius:12px;border:1.5px solid #dcd9d1;background:#fff;font-weight:800;font-size:15px;cursor:pointer;color:#1c1f1a">Simpan draft</button>
+                  <button onClick="{{ qb.send }}" style="flex:1.4;padding:13px 16px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">{{ qb.sendLabel }}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.order }}">
+          <div data-screen-label="Order & booking" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h1 style="margin:0;font:600 28px Lexend">Order &amp; booking</h1>
+                <div style="font-size:15.5px;color:#6b6f66">Kapasitas dapur {{ capLabel }} pax/hari · konflik jadwal ditandai merah.</div>
+              </div>
+              <div style="display:flex;padding:4px;border-radius:12px;background:#efede7;gap:4px">
+                <sc-for list="{{ viewTabs }}" as="t" hint-placeholder-count="2">
+                  <button onClick="{{ t.onClick }}" style="padding:9px 16px;border-radius:9px;border:none;background:{{ t.bg }};color:#1c1f1a;font-weight:800;font-size:14px;cursor:pointer;box-shadow:{{ t.shadow }}">{{ t.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <sc-if value="{{ isOrderList }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <sc-for list="{{ filterChips }}" as="f" hint-placeholder-count="4">
+                    <button onClick="{{ f.onClick }}" style="padding:8px 14px;border-radius:999px;border:1.5px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }};font-weight:800;font-size:13.5px;cursor:pointer">{{ f.label }} · {{ f.n }}</button>
+                  </sc-for>
+                </div>
+                <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow-x:auto">
+                  <div style="min-width:980px">
+                    <div style="display:grid;grid-template-columns:1.2fr 1.8fr 1fr 1.3fr .6fr 1.1fr 1.2fr 1fr;padding:14px 24px;background:#faf9f6;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                      <div>ORDER</div><div>PELANGGAN</div><div>TANGGAL</div><div>PAKET</div><div>PAX</div><div>TOTAL</div><div>STATUS</div><div>PEMBAYARAN</div>
+                    </div>
+                    <sc-for list="{{ orderRows }}" as="r" hint-placeholder-count="6">
+                      <button onClick="{{ r.open }}" style="display:grid;grid-template-columns:1.2fr 1.8fr 1fr 1.3fr .6fr 1.1fr 1.2fr 1fr;align-items:center;width:100%;text-align:left;padding:15px 24px;border:none;border-top:1px solid #f0eee9;background:#fff;cursor:pointer;font-size:15px;color:#1c1f1a" style-hover="background:#fbfaf7">
+                        <div style="font-weight:700">{{ r.no }}</div>
+                        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">{{ r.customer }}</span><span style="font-size:13px;color:#6b6f66">{{ r.type }} · {{ r.event }}</span></div>
+                        <div>{{ r.dateLabel }}<span style="color:#6b6f66"> · {{ r.time }}</span></div>
+                        <div>{{ r.pkgName }}</div>
+                        <div>{{ r.pax }}</div>
+                        <div style="font-weight:700">{{ r.total }}</div>
+                        <div><span style="display:inline-flex;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;background:{{ r.chipBg }};color:{{ r.chipFg }}">{{ r.status }}</span></div>
+                        <div style="font-size:13.5px;font-weight:800;color:{{ r.payFg }}">{{ r.payLabel }}</div>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isOrderCal }}">
+              <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:16px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div style="font:600 20px Lexend">{{ cal.label }}</div>
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ cal.prev }}" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #dcd9d1;background:#fff;cursor:pointer;font-size:16px">‹</button>
+                    <button onClick="{{ cal.next }}" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #dcd9d1;background:#fff;cursor:pointer;font-size:16px">›</button>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px">
+                  <sc-for list="{{ cal.week }}" as="w"><div style="font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f;padding:4px 8px">{{ w }}</div></sc-for>
+                  <sc-for list="{{ cal.cells }}" as="c" hint-placeholder-count="35">
+                    <div style="min-height:122px;border-radius:12px;border:1.5px solid {{ c.border }};background:{{ c.bg }};padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0">
+                      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;font-size:14px;color:{{ c.dayFg }}">{{ c.day }}</span><span style="font-size:11.5px;font-weight:800;color:{{ c.barColor }}">{{ c.usedLabel }}</span></div>
+                      <sc-if value="{{ c.hasBar }}"><div style="height:5px;border-radius:3px;background:#f1f0ec;overflow:hidden"><div style="height:100%;width:{{ c.pct }};background:{{ c.barColor }}"></div></div></sc-if>
+                      <sc-for list="{{ c.orders }}" as="o">
+                        <button onClick="{{ o.open }}" style="text-align:left;padding:4px 7px;border-radius:7px;border:none;background:{{ o.bg }};color:{{ o.fg }};font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.label }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.prod }}">
+          <div data-screen-label="Produksi" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h1 style="margin:0;font:600 28px Lexend">Produksi</h1>
+              <div style="font-size:15.5px;color:#6b6f66">Kebutuhan bahan = resep per porsi × pax × (1 + waste 5%). Produksi hanya bisa dimulai jika stok cukup.</div>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+              <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ prodList }}" as="p" hint-placeholder-count="4">
+                  <button onClick="{{ p.onClick }}" style="text-align:left;padding:16px 18px;border-radius:16px;border:2px solid {{ p.border }};background:#fff;cursor:pointer;display:flex;flex-direction:column;gap:6px;color:#1c1f1a">
+                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:800;font-size:15px">{{ p.no }}</span><span style="padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;background:{{ p.chipBg }};color:{{ p.chipFg }}">{{ p.status }}</span></div>
+                    <div style="font-size:14.5px">{{ p.customer }}</div>
+                    <div style="font-size:13px;color:#6b6f66">{{ p.dateLabel }} · {{ p.pkgName }} · {{ p.pax }} pax</div>
+                  </button>
+                </sc-for>
+                <sc-if value="{{ noProd }}"><div style="padding:24px;border-radius:16px;background:#fff;border:1px dashed #dcd9d1;color:#6b6f66;font-size:15px">Tidak ada order yang menunggu produksi.</div></sc-if>
+              </div>
+              <sc-if value="{{ hasPs }}">
+                <div style="flex:2.4 1 560px;min-width:0;background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow:hidden">
+                  <div style="padding:24px 26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;border-bottom:1px solid #f0eee9">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="font-size:13px;font-weight:800;letter-spacing:.1em;color:#6b6f66">PRODUCTION ORDER · {{ ps.no }}</div>
+                      <div style="font:600 22px Lexend">{{ ps.pkgName }} — {{ ps.pax }} porsi</div>
+                      <div style="font-size:14.5px;color:#55594f">{{ ps.customer }} · kirim {{ ps.dateLabel }}, {{ ps.time }} · PIC dapur: Chef Bayu</div>
+                    </div>
+                    <sc-if value="{{ ps.hasBtn }}"><button onClick="{{ ps.onNext }}" style="padding:12px 18px;border-radius:12px;border:none;background:{{ ps.btnBg }};color:#fff;font-weight:800;font-size:15px;cursor:pointer">{{ ps.btnLabel }}</button></sc-if>
+                  </div>
+                  <div style="padding:20px 26px;display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font:600 17px Lexend">Kebutuhan bahan</div><div style="font-size:14px;color:#55594f">Estimasi biaya bahan <b style="color:#1c1f1a">{{ ps.cost }}</b></div></div>
+                    <div style="border:1px solid #f0eee9;border-radius:14px;overflow:hidden">
+                      <div style="display:grid;grid-template-columns:1.6fr .9fr 1fr 1fr 1.1fr;padding:11px 16px;background:#faf9f6;font-size:12px;font-weight:800;letter-spacing:.07em;color:#55594f"><div>BAHAN</div><div>PER PAX</div><div>KEBUTUHAN</div><div>STOK</div><div>STATUS</div></div>
+                      <sc-for list="{{ ps.needs }}" as="n" hint-placeholder-count="6">
+                        <div style="display:grid;grid-template-columns:1.6fr .9fr 1fr 1fr 1.1fr;padding:11px 16px;border-top:1px solid #f0eee9;font-size:14.5px;align-items:center"><div style="font-weight:700">{{ n.name }}</div><div>{{ n.per }}</div><div>{{ n.qty }}</div><div>{{ n.stock }}</div><div><span style="padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;background:{{ n.bg }};color:{{ n.fg }}">{{ n.label }}</span></div></div>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ ps.short }}"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;background:#fbe4df;color:#8f2a1c;font-size:14px;font-weight:700"><span>Stok tidak cukup untuk order ini. Buat purchase request agar produksi bisa dimulai.</span><button onClick="{{ goInv }}" style="padding:8px 12px;border-radius:10px;border:none;background:#8f2a1c;color:#fff;font-weight:800;cursor:pointer">Ke persediaan →</button></div></sc-if>
+                    <div style="font:600 17px Lexend;margin-top:8px">Checklist dapur &amp; QC</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+                      <sc-for list="{{ ps.checks }}" as="c" hint-placeholder-count="4">
+                        <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1.5px solid #e6e4dd;background:#fff;cursor:pointer;font-size:14.5px;text-align:left;color:#1c1f1a">
+                          <span style="width:22px;height:22px;border-radius:7px;flex:none;border:2px solid {{ c.boxBorder }};background:{{ c.boxBg }};color:#fff;display:grid;place-items:center;font-size:13px;font-weight:800">{{ c.mark }}</span>{{ c.label }}
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.inv }}">
+          <div data-screen-label="Persediaan" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h1 style="margin:0;font:600 28px Lexend">Persediaan &amp; pembelian</h1>
+                <div style="font-size:15.5px;color:#6b6f66">Stok direservasi otomatis untuk order Confirmed. Tersedia = stok − reservasi.</div>
+              </div>
+              <sc-if value="{{ hasShort }}"><button onClick="{{ makePR }}" style="padding:12px 18px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">Buat purchase request ({{ shortCount }} bahan)</button></sc-if>
+            </div>
+            <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow-x:auto">
+              <div style="min-width:900px">
+                <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr 1.3fr 1.3fr;padding:14px 24px;background:#faf9f6;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                  <div>BAHAN</div><div>STOK</div><div>DIRESERVASI</div><div>TERSEDIA</div><div>MINIMUM</div><div>BATCH TERDEKAT</div><div>STATUS</div>
+                </div>
+                <sc-for list="{{ invRows }}" as="i" hint-placeholder-count="10">
+                  <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr 1.3fr 1.3fr;align-items:center;padding:13px 24px;border-top:1px solid #f0eee9;font-size:15px">
+                    <div style="font-weight:700">{{ i.name }}</div><div>{{ i.st }}</div><div style="color:#55594f">{{ i.res }}</div><div style="font-weight:800;color:{{ i.avFg }}">{{ i.av }}</div><div style="color:#55594f">{{ i.mn }}</div><div style="font-size:13.5px;color:#55594f">{{ i.exp }}</div>
+                    <div><span style="padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;background:{{ i.bg }};color:{{ i.fg }}">{{ i.label }}</span></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="font:600 20px Lexend">Purchase request &amp; PO</div>
+              <sc-if value="{{ noPr }}"><div style="padding:22px;border-radius:16px;background:#fff;border:1px dashed #dcd9d1;color:#6b6f66;font-size:15px">Belum ada purchase request. Bahan yang kurang akan muncul di tombol di atas.</div></sc-if>
+              <sc-for list="{{ prRows }}" as="p">
+                <div style="background:#fff;border:1px solid #ebe9e3;border-radius:18px;padding:18px 22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center">
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <div style="display:flex;gap:10px;align-items:center"><span style="font-weight:800;font-size:15.5px">{{ p.no }}</span><span style="padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800;background:{{ p.chipBg }};color:{{ p.chipFg }}">{{ p.status }}</span></div>
+                    <div style="font-size:14px;color:#55594f">{{ p.items }}</div>
+                    <div style="font-size:13px;color:#6b6f66">{{ p.meta }}</div>
+                  </div>
+                  <sc-if value="{{ p.hasAct }}"><button onClick="{{ p.act }}" style="padding:10px 16px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:14px;cursor:pointer">{{ p.actLabel }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.fin }}">
+          <div data-screen-label="Keuangan" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h1 style="margin:0;font:600 28px Lexend">Keuangan</h1>
+              <div style="font-size:15.5px;color:#6b6f66">Invoice terbit saat order Confirmed. Satu invoice bisa menerima beberapa pembayaran (DP, cicilan, pelunasan).</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+              <sc-for list="{{ finKpis }}" as="k" hint-placeholder-count="4">
+                <div style="padding:22px 24px;background:#fff;border:1px solid #ebe9e3;border-radius:18px;display:flex;flex-direction:column;gap:8px">
+                  <div style="font-size:14px;font-weight:700;color:#6b6f66">{{ k.label }}</div>
+                  <div style="font:600 26px/1.1 Lexend">{{ k.value }}</div>
+                  <div style="font-size:13.5px;color:{{ k.subFg }};font-weight:700">{{ k.sub }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow-x:auto">
+              <div style="padding:20px 24px;font:600 19px Lexend">Invoice</div>
+              <div style="min-width:960px">
+                <div style="display:grid;grid-template-columns:1.2fr 1.7fr 1.1fr 1.1fr 1.1fr .9fr 1.1fr 1.3fr;padding:13px 24px;background:#faf9f6;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                  <div>INVOICE</div><div>PELANGGAN</div><div>TOTAL</div><div>DIBAYAR</div><div>SISA</div><div>JATUH TEMPO</div><div>STATUS</div><div></div>
+                </div>
+                <sc-for list="{{ invoiceRows }}" as="v" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:1.2fr 1.7fr 1.1fr 1.1fr 1.1fr .9fr 1.1fr 1.3fr;align-items:center;padding:14px 24px;border-top:1px solid #f0eee9;font-size:15px">
+                    <div style="font-weight:700">{{ v.inv }}</div>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">{{ v.customer }}</span><span style="font-size:13px;color:#6b6f66">{{ v.terms }}</span></div>
+                    <div>{{ v.total }}</div><div style="color:#1f6b2b;font-weight:700">{{ v.paid }}</div><div style="font-weight:800">{{ v.out }}</div><div style="color:#55594f">{{ v.due }}</div>
+                    <div><span style="padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:800;background:{{ v.chipBg }};color:{{ v.chipFg }}">{{ v.status }}</span></div>
+                    <div style="display:flex;justify-content:flex-end"><sc-if value="{{ v.hasOut }}"><button onClick="{{ v.onPay }}" style="padding:8px 14px;border-radius:10px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:13.5px;cursor:pointer;white-space:nowrap">Catat pembayaran</button></sc-if></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow-x:auto">
+              <div style="padding:20px 24px 4px;font:600 19px Lexend">Profit per order</div>
+              <div style="padding:0 24px 14px;font-size:14px;color:#6b6f66">Gross profit = revenue (sebelum PPN) − food cost standar. Biaya tenaga kerja &amp; overhead belum dialokasikan.</div>
+              <div style="min-width:820px">
+                <div style="display:grid;grid-template-columns:1.2fr 1.8fr 1.2fr 1.2fr 1.2fr 1.4fr;padding:13px 24px;background:#faf9f6;font-size:12.5px;font-weight:800;letter-spacing:.07em;color:#55594f">
+                  <div>ORDER</div><div>PELANGGAN</div><div>REVENUE</div><div>FOOD COST</div><div>GROSS PROFIT</div><div>MARGIN</div>
+                </div>
+                <sc-for list="{{ profitRows }}" as="p" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:1.2fr 1.8fr 1.2fr 1.2fr 1.2fr 1.4fr;align-items:center;padding:13px 24px;border-top:1px solid #f0eee9;font-size:15px">
+                    <div style="font-weight:700">{{ p.no }}</div><div>{{ p.customer }}</div><div>{{ p.rev }}</div><div style="color:#55594f">{{ p.cost }}</div><div style="font-weight:800">{{ p.gp }}</div>
+                    <div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:7px;border-radius:4px;background:#f1f0ec;overflow:hidden"><div style="height:100%;width:{{ p.w }};background:#2e8136"></div></div><span style="font-weight:800;font-size:14px;width:44px">{{ p.margin }}</span></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is.wa }}">
+          <div data-screen-label="WhatsApp center" style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h1 style="margin:0;font:600 28px Lexend">WhatsApp center</h1>
+              <div style="font-size:15.5px;color:#6b6f66">Pesan otomatis terkirim dari event sistem. Promosi hanya ke pelanggan opt-in.</div>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+              <div style="flex:2 1 520px;min-width:0;background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow:hidden">
+                <div style="padding:20px 24px;font:600 19px Lexend;border-bottom:1px solid #f0eee9">Log pesan</div>
+                <sc-for list="{{ msgRows }}" as="m" hint-placeholder-count="5">
+                  <div style="padding:14px 24px;border-bottom:1px solid #f0eee9;display:flex;gap:14px;align-items:flex-start">
+                    <div style="width:38px;height:38px;border-radius:50%;flex:none;background:#e9f4e6;color:#1f6b2b;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l1.9-5.7A8.4 8.4 0 1 1 21 11.5z"></path></svg></div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                      <div style="display:flex;justify-content:space-between;gap:10px"><span style="font-weight:800;font-size:15px">{{ m.to }}</span><span style="font-size:12.5px;color:#6b6f66">{{ m.time }}</span></div>
+                      <div style="font-size:14px;color:#2a2e27;line-height:1.45">{{ m.text }}</div>
+                      <div style="display:flex;gap:8px;align-items:center;margin-top:3px"><span style="font-size:12px;font-family:ui-monospace,Menlo,monospace;color:#6b6f66">{{ m.tpl }}</span><span style="padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:800;background:{{ m.chipBg }};color:{{ m.chipFg }}">{{ m.status }}</span></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex:1 1 320px;min-width:0;background:#fff;border:1px solid #ebe9e3;border-radius:20px;overflow:hidden">
+                <div style="padding:20px 24px;font:600 19px Lexend;border-bottom:1px solid #f0eee9">Aturan otomatis</div>
+                <sc-for list="{{ tplRows }}" as="t" hint-placeholder-count="8">
+                  <div style="padding:13px 24px;border-bottom:1px solid #f0eee9;display:flex;justify-content:space-between;align-items:center;gap:12px">
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;font-size:14.5px">{{ t.trigger }}</span><span style="font-size:12.5px;font-family:ui-monospace,Menlo,monospace;color:#6b6f66">{{ t.name }}</span></div>
+                    <button onClick="{{ t.onToggle }}" style="width:44px;height:26px;flex:none;border-radius:13px;border:none;background:{{ t.trackBg }};position:relative;cursor:pointer;padding:0"><span style="position:absolute;top:3px;left:{{ t.knobLeft }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span></button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </main>
+  </div>
+
+  <sc-if value="{{ hasLd }}">
+    <div style="position:fixed;inset:0;z-index:40;display:flex;justify-content:flex-end">
+      <div onClick="{{ closeDrawer }}" style="position:absolute;inset:0;background:rgba(20,28,18,.35)"></div>
+      <aside style="position:relative;width:520px;max-width:100%;height:100%;background:#fff;overflow-y:auto;display:flex;flex-direction:column;animation:cpIn .22s ease-out">
+        <div style="padding:26px 28px;border-bottom:1px solid #f0eee9;display:flex;justify-content:space-between;gap:16px">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:12.5px;font-weight:800;letter-spacing:.1em;color:#6b6f66">LEAD · {{ ld.source }}</div>
+            <div style="font:600 24px Lexend">{{ ld.name }}</div>
+            <div style="font-size:15px;color:#55594f">{{ ld.company }} · {{ ld.phone }}</div>
+          </div>
+          <button onClick="{{ closeDrawer }}" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #dcd9d1;background:#fff;cursor:pointer;font-size:18px;flex:none">×</button>
+        </div>
+        <div style="padding:22px 28px;display:flex;flex-direction:column;gap:22px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <sc-for list="{{ ld.facts }}" as="f" hint-placeholder-count="6">
+              <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:12.5px;font-weight:800;color:#6b6f66">{{ f.k }}</span><span style="font-size:15.5px;font-weight:700">{{ f.v }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:800">Lead score</span><span style="font-weight:800;color:#1f6b2b">{{ ld.score }}/100</span></div>
+            <div style="height:8px;border-radius:4px;background:#f1f0ec;overflow:hidden"><div style="height:100%;width:{{ ld.scoreW }};background:#2e8136"></div></div>
+            <div style="font-size:13px;color:#6b6f66">Berdasarkan budget, pax, kedekatan tanggal acara dan kelengkapan kebutuhan.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-weight:800;font-size:14px">Tahap pipeline</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <sc-for list="{{ ld.stages }}" as="st" hint-placeholder-count="7">
+                <button onClick="{{ st.onClick }}" style="padding:7px 12px;border-radius:999px;border:1.5px solid {{ st.border }};background:{{ st.bg }};color:{{ st.fg }};font-weight:800;font-size:13px;cursor:pointer">{{ st.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-weight:800;font-size:14px">Aktivitas &amp; follow-up</div>
+            <div style="display:flex;gap:8px">
+              <input value="{{ note }}" onChange="{{ onNote }}" placeholder="Catat follow-up…" style="flex:1;height:44px;border:1.5px solid #dcd9d1;border-radius:12px;padding:0 12px;font-size:15px;color:#1c1f1a">
+              <button onClick="{{ addNote }}" style="padding:0 16px;border-radius:12px;border:1.5px solid #dcd9d1;background:#fff;font-weight:800;cursor:pointer;color:#1c1f1a">Simpan</button>
+            </div>
+            <sc-for list="{{ ld.acts }}" as="a">
+              <div style="display:flex;gap:12px;font-size:14.5px;padding:10px 0;border-bottom:1px solid #f0eee9"><span style="width:56px;flex:none;color:#6b6f66;font-weight:700;font-size:13px">{{ a.t }}</span><span style="line-height:1.45">{{ a.x }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-top:auto;padding:18px 28px;border-top:1px solid #f0eee9;display:flex;gap:10px;position:sticky;bottom:0;background:#fff">
+          <button onClick="{{ ld.markLost }}" style="padding:13px 16px;border-radius:12px;border:1.5px solid #dcd9d1;background:#fff;font-weight:800;font-size:15px;cursor:pointer;color:#8f2a1c">Tandai lost</button>
+          <button onClick="{{ ld.makeQuote }}" style="flex:1;padding:13px 16px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">Buat quotation dari lead ini</button>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasOd }}">
+    <div style="position:fixed;inset:0;z-index:40;display:flex;justify-content:flex-end">
+      <div onClick="{{ closeDrawer }}" style="position:absolute;inset:0;background:rgba(20,28,18,.35)"></div>
+      <aside style="position:relative;width:580px;max-width:100%;height:100%;background:#fff;overflow-y:auto;display:flex;flex-direction:column;animation:cpIn .22s ease-out">
+        <div style="padding:26px 28px 20px;border-bottom:1px solid #f0eee9;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;justify-content:space-between;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;gap:10px;align-items:center"><span style="font-size:12.5px;font-weight:800;letter-spacing:.1em;color:#6b6f66">{{ od.no }}</span><span style="padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;background:{{ od.chipBg }};color:{{ od.chipFg }}">{{ od.status }}</span></div>
+              <div style="font:600 24px Lexend">{{ od.customer }}</div>
+              <div style="font-size:15px;color:#55594f">{{ od.type }} · {{ od.event }}</div>
+            </div>
+            <button onClick="{{ closeDrawer }}" style="width:38px;height:38px;border-radius:10px;border:1.5px solid #dcd9d1;background:#fff;cursor:pointer;font-size:18px;flex:none">×</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:4px">
+              <sc-for list="{{ od.segs }}" as="sg" hint-placeholder-count="8"><div title="{{ sg.label }}" style="flex:1;height:6px;border-radius:3px;background:{{ sg.bg }}"></div></sc-for>
+            </div>
+            <div style="font-size:13px;color:#6b6f66;font-weight:700">{{ od.stepLabel }}</div>
+          </div>
+        </div>
+        <div style="padding:22px 28px;display:flex;flex-direction:column;gap:22px">
+          <sc-if value="{{ od.hasWarn }}"><div style="padding:12px 14px;border-radius:12px;background:{{ od.warnBg }};color:{{ od.warnFg }};font-size:14px;font-weight:700;line-height:1.45">{{ od.warn }}</div></sc-if>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <sc-for list="{{ od.facts }}" as="f" hint-placeholder-count="8">
+              <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:12.5px;font-weight:800;color:#6b6f66">{{ f.k }}</span><span style="font-size:15px;font-weight:700;line-height:1.35">{{ f.v }}</span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #f0eee9;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 16px Lexend">Invoice {{ od.inv }}</span><sc-if value="{{ od.canPay }}"><button onClick="{{ od.onPay }}" style="padding:7px 12px;border-radius:10px;border:1.5px solid #b5d8ae;background:#e9f4e6;color:#1f6b2b;font-weight:800;font-size:13px;cursor:pointer">Catat pembayaran</button></sc-if></div>
+            <sc-for list="{{ od.lines }}" as="ln" hint-placeholder-count="5">
+              <div style="display:flex;justify-content:space-between;font-size:14.5px"><span style="color:#55594f">{{ ln.label }}</span><span style="font-weight:700">{{ ln.value }}</span></div>
+            </sc-for>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #f0eee9;padding-top:10px"><span style="font-weight:800">Total</span><span style="font:600 22px Lexend">{{ od.total }}</span></div>
+            <div style="height:8px;border-radius:4px;background:#f1f0ec;overflow:hidden"><div style="height:100%;width:{{ od.payW }};background:#2e8136"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px"><span>Dibayar <b style="color:#1f6b2b">{{ od.paid }}</b></span><span>Sisa <b>{{ od.out }}</b></span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <sc-for list="{{ od.profit }}" as="p" hint-placeholder-count="3">
+              <div style="padding:14px;border-radius:14px;background:#faf9f6;display:flex;flex-direction:column;gap:3px"><span style="font-size:12px;font-weight:800;color:#6b6f66">{{ p.k }}</span><span style="font-weight:800;font-size:15.5px">{{ p.v }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="font-weight:800;font-size:14px">Riwayat status (audit trail)</div>
+            <sc-for list="{{ od.history }}" as="h">
+              <div style="display:flex;gap:12px;align-items:center;font-size:14px;padding:6px 0"><span style="width:8px;height:8px;border-radius:50%;background:#2e8136;flex:none"></span><span style="font-weight:700;flex:1">{{ h.s }}</span><span style="color:#6b6f66;font-size:13px">{{ h.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <sc-if value="{{ od.hasNext }}">
+          <div style="margin-top:auto;padding:18px 28px;border-top:1px solid #f0eee9;position:sticky;bottom:0;background:#fff">
+            <button onClick="{{ od.onNext }}" style="width:100%;padding:14px 16px;border-radius:12px;border:none;background:{{ od.nextBg }};color:#fff;font-weight:800;font-size:15.5px;cursor:pointer">{{ od.nextLabel }}</button>
+          </div>
+        </sc-if>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasPay }}">
+    <div style="position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px">
+      <div onClick="{{ closePay }}" style="position:absolute;inset:0;background:rgba(20,28,18,.4)"></div>
+      <div style="position:relative;width:460px;max-width:100%;background:#fff;border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:16px;animation:cpUp .2s ease-out">
+        <div style="display:flex;flex-direction:column;gap:4px"><div style="font:600 21px Lexend">Catat pembayaran</div><div style="font-size:14.5px;color:#55594f">{{ pay.inv }} · {{ pay.customer }}</div></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 14px;border-radius:12px;background:#faf9f6;font-size:14.5px"><span>Sisa tagihan</span><b>{{ pay.out }}</b></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ pay.quick }}" as="qk"><button onClick="{{ qk.onClick }}" style="padding:8px 12px;border-radius:10px;border:1.5px solid #dcd9d1;background:#fff;font-weight:800;font-size:13.5px;cursor:pointer;color:#1c1f1a">{{ qk.label }}</button></sc-for>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:800;color:#55594f">Nominal (Rp)
+          <input type="number" value="{{ pay.amt }}" onChange="{{ pay.onAmt }}" style="height:48px;border:1.5px solid #dcd9d1;border-radius:12px;padding:0 12px;font-size:17px;font-weight:700;color:#1c1f1a">
+        </label>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:800;color:#55594f">Metode</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ pay.methods }}" as="mt"><button onClick="{{ mt.onClick }}" style="padding:8px 12px;border-radius:10px;border:1.5px solid {{ mt.border }};background:{{ mt.bg }};color:{{ mt.fg }};font-weight:800;font-size:13.5px;cursor:pointer">{{ mt.label }}</button></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button onClick="{{ closePay }}" style="flex:1;padding:13px;border-radius:12px;border:1.5px solid #dcd9d1;background:#fff;font-weight:800;font-size:15px;cursor:pointer;color:#1c1f1a">Batal</button>
+          <button onClick="{{ pay.save }}" style="flex:1.5;padding:13px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">Simpan pembayaran</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasLf }}">
+    <div style="position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px">
+      <div onClick="{{ closeLf }}" style="position:absolute;inset:0;background:rgba(20,28,18,.4)"></div>
+      <div style="position:relative;width:540px;max-width:100%;background:#fff;border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:16px;animation:cpUp .2s ease-out">
+        <div style="display:flex;flex-direction:column;gap:4px"><div style="font:600 21px Lexend">Lead baru</div><div style="font-size:14.5px;color:#55594f">Pesan sambutan WhatsApp terkirim otomatis setelah disimpan.</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{ lfFields }}" as="f" hint-placeholder-count="6">
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:800;color:#55594f">{{ f.label }}
+              <input type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.ph }}" style="height:44px;border:1.5px solid #dcd9d1;border-radius:12px;padding:0 12px;font-size:15px;color:#1c1f1a">
+            </label>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:800;color:#55594f">Sumber</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ lfSources }}" as="sr"><button onClick="{{ sr.onClick }}" style="padding:8px 12px;border-radius:10px;border:1.5px solid {{ sr.border }};background:{{ sr.bg }};color:{{ sr.fg }};font-weight:800;font-size:13.5px;cursor:pointer">{{ sr.label }}</button></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button onClick="{{ closeLf }}" style="flex:1;padding:13px;border-radius:12px;border:1.5px solid #dcd9d1;background:#fff;font-weight:800;font-size:15px;cursor:pointer;color:#1c1f1a">Batal</button>
+          <button onClick="{{ saveLead }}" style="flex:1.5;padding:13px;border-radius:12px;border:none;background:#1f6b2b;color:#fff;font-weight:800;font-size:15px;cursor:pointer">Simpan lead</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}">
+    <div style="position:fixed;right:28px;bottom:28px;z-index:60;max-width:440px;padding:14px 18px;border-radius:14px;background:{{ toastBg }};color:#fff;font-size:15px;font-weight:700;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.2);animation:cpUp .2s ease-out">{{ toastMsg }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;capacity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:800,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:200,&quot;max&quot;:2000,&quot;step&quot;:50,&quot;section&quot;:&quot;Aturan bisnis&quot;},&quot;discLimit&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:10,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:0,&quot;max&quot;:30,&quot;unit&quot;:&quot;%&quot;,&quot;section&quot;:&quot;Aturan bisnis&quot;}}">
+class Component extends DCLogic {
+  PKG = {
+    nasibox:{name:'Nasi Box Premium',cat:'Nasi box',price:35000,min:50,desc:'Nasi, ayam bakar madu, sayur, sambal, kerupuk, telur balado'},
+    prasmanan:{name:'Prasmanan Silver',cat:'Prasmanan',price:65000,min:100,desc:'2 lauk ayam, 1 daging, sayur, buah potong, minuman'},
+    snack:{name:'Snack Box Rapat',cat:'Snack box',price:18000,min:30,desc:'3 kue basah/kering, buah potong, air mineral'},
+    wedding:{name:'Wedding Gold',cat:'Wedding',price:95000,min:300,desc:'Prasmanan lengkap, 3 gubukan, dessert, dekor meja'},
+    corplunch:{name:'Corporate Lunch',cat:'Corporate',price:32000,min:50,desc:'Menu harian berganti, kontrak bulanan, harga khusus'}
+  };
+  ADDON = {esbuah:{name:'Es buah',price:6000,per:true},puding:{name:'Puding cup',price:5000,per:true},dekor:{name:'Dekorasi meja',price:750000,per:false},pramusaji:{name:'Pramusaji 4 orang',price:1200000,per:false}};
+  ING = {
+    beras:{name:'Beras premium',price:15000,min:100,exp:'B-1107 · Mei 2027'},
+    ayam:{name:'Ayam potong',price:38000,min:80,exp:'B-1122 · 27 Nov'},
+    daging:{name:'Daging sapi',price:130000,min:30,exp:'B-1120 · 3 Des'},
+    sayur:{name:'Sayuran campur',price:12000,min:30,exp:'B-1123 · 26 Nov'},
+    bumbu:{name:'Bumbu dasar',price:25000,min:10,exp:'B-1115 · 10 Des'},
+    minyak:{name:'Minyak goreng',price:18000,min:20,exp:'B-1030 · Apr 2027'},
+    tepung:{name:'Tepung terigu',price:12000,min:15,exp:'B-1101 · Feb 2027'},
+    telur:{name:'Telur ayam',price:28000,min:25,exp:'B-1121 · 8 Des'},
+    gula:{name:'Gula pasir',price:16000,min:10,exp:'B-1018 · Jun 2027'},
+    buah:{name:'Buah segar',price:20000,min:20,exp:'B-1123 · 28 Nov'}
+  };
+  RECIPE = {
+    nasibox:[['beras',.1],['ayam',.12],['sayur',.05],['bumbu',.02],['minyak',.015],['telur',.03]],
+    prasmanan:[['beras',.12],['ayam',.1],['daging',.08],['sayur',.08],['bumbu',.03],['minyak',.02],['buah',.05]],
+    snack:[['tepung',.05],['telur',.03],['gula',.02],['minyak',.01],['buah',.03]],
+    wedding:[['beras',.12],['ayam',.1],['daging',.1],['sayur',.08],['bumbu',.03],['minyak',.02],['buah',.06],['gula',.01]],
+    corplunch:[['beras',.1],['ayam',.1],['sayur',.06],['bumbu',.02],['minyak',.015],['telur',.02]]
+  };
+  ST = ['Draft','Pending Approval','Confirmed','In Production','Ready','Dispatched','Delivered','Completed'];
+  STAGES = ['New Lead','Contacted','Qualified','Quotation Sent','Negotiation','Won','Lost'];
+  CHIP = {'Draft':['#efede8','#55594f'],'Pending Approval':['#fdf1d8','#7a4f00'],'Confirmed':['#e3edfb','#1f4f9a'],'In Production':['#fde9dc','#9a3f14'],'Ready':['#dcf2ed','#0f6b5c'],'Dispatched':['#ece6fb','#5a3fa8'],'Delivered':['#e9f4e6','#1f6b2b'],'Completed':['#d5ead0','#17521f'],
+    'Menunggu approval':['#fdf1d8','#7a4f00'],'Terkirim':['#e3edfb','#1f4f9a'],'Disetujui':['#dcf2ed','#0f6b5c'],'Dikonversi':['#d5ead0','#17521f'],
+    'Menunggu PO':['#fdf1d8','#7a4f00'],'PO diterbitkan':['#e3edfb','#1f4f9a'],'Diterima':['#d5ead0','#17521f'],
+    'Belum bayar':['#fbe4df','#8f2a1c'],'DP / sebagian':['#fdf1d8','#7a4f00'],'Lunas':['#d5ead0','#17521f'],
+    'Sent':['#e3edfb','#1f4f9a'],'Delivered ':['#e9f4e6','#1f6b2b'],'Read':['#d5ead0','#17521f'],'Failed':['#fbe4df','#8f2a1c']};
+
+  mk(o){ const t=this.calc(o).total; return {...o,paid:Math.round(t*o.paidPct),history:[{s:'Draft',t:'—'},{s:o.status,t:'—'}]}; }
+
+  state = {
+    screen:'dash', note:'', toast:null, selLead:null, selOrder:null, quoteMode:'list', qb:null,
+    orderView:'list', orderFilter:'Semua', calMonth:10, prodSel:null, checks:{}, pay:null, lf:null, prs:[],
+    stock:{beras:180,ayam:60,daging:25,sayur:40,bumbu:18,minyak:35,tepung:20,telur:30,gula:15,buah:22},
+    tplOn:{lead:true,quote:true,expire:true,confirm:true,dp:true,prod:true,done:true,inactive:false},
+    leads:[
+      {id:'L1',name:'Andi Pratama',company:'PT Nusantara Digital',phone:'0812-1188-2041',source:'WhatsApp',event:'Meeting tahunan',pax:200,date:'2026-12-05',budget:40000,stage:'Qualified',sales:'Dimas Arya',score:82,loc:'Gedung Nusantara, Jl. Thamrin 9',acts:[{t:'23 Nov',x:'Survey kebutuhan: 20 pax menu vegetarian'},{t:'21 Nov',x:'Lead masuk via WhatsApp'}]},
+      {id:'L2',name:'Rina & Fajar',company:'Pasangan pengantin',phone:'0813-5520-9912',source:'Instagram',event:'Resepsi pernikahan',pax:500,date:'2026-12-12',budget:95000,stage:'Negotiation',sales:'Sari Utami',score:91,loc:'Gedung Graha Kencana',acts:[{t:'22 Nov',x:'Minta diskon 12% — menunggu approval Sales Manager'},{t:'18 Nov',x:'Menu tasting dijadwalkan 26 Nov'}]},
+      {id:'L3',name:'Bu Lestari',company:'Sekolah Cendekia',phone:'0821-7733-1020',source:'Website',event:'Snack rapat komite',pax:120,date:'2026-11-30',budget:20000,stage:'New Lead',sales:'Dimas Arya',score:54,loc:'Sekolah Cendekia, Jl. Raya Tajur',acts:[{t:'24 Nov',x:'Form website masuk'}]},
+      {id:'L4',name:'Hendra Wijaya',company:'PT Graha Sejahtera',phone:'0811-9002-4410',source:'Referral',event:'Corporate lunch harian',pax:120,date:'2026-12-07',budget:33000,stage:'Contacted',sales:'Sari Utami',score:77,loc:'Graha Sejahtera Tower',acts:[{t:'23 Nov',x:'Telepon perkenalan, minta sampel menu minggu depan'}]},
+      {id:'L5',name:'Maya Kusuma',company:'Pribadi',phone:'0857-2210-8831',source:'WhatsApp',event:'Ulang tahun anak',pax:60,date:'2026-12-06',budget:30000,stage:'New Lead',sales:'Dimas Arya',score:46,loc:'Perum Bukit Asri B4',acts:[{t:'24 Nov',x:'Chat masuk: tanya paket nasi box'}]},
+      {id:'L6',name:'Pak Rahmat',company:'Yayasan Harapan',phone:'0812-6612-0090',source:'Referral',event:'Santunan & makan bersama',pax:300,date:'2026-12-20',budget:30000,stage:'Quotation Sent',sales:'Sari Utami',score:68,loc:'Aula Yayasan Harapan',acts:[{t:'22 Nov',x:'Quotation Q-2026-0136 dikirim'}]},
+      {id:'L7',name:'Dewi Anggraini',company:'PT Sinar Logam',phone:'0819-4410-2277',source:'Website',event:'Family gathering',pax:400,date:'2026-12-13',budget:45000,stage:'Lost',sales:'Dimas Arya',score:40,loc:'Puncak',acts:[{t:'19 Nov',x:'Lost — harga di atas budget'}]},
+      {id:'L8',name:'Ibu Melati',company:'Hotel Bumi Asri',phone:'0815-7781-3300',source:'Instagram',event:'Gathering karyawan',pax:180,date:'2026-12-05',budget:70000,stage:'Quotation Sent',sales:'Sari Utami',score:85,loc:'Hotel Bumi Asri, Jl. Pajajaran 10',acts:[{t:'23 Nov',x:'Customer setuju penawaran via telepon'}]},
+      {id:'L9',name:'Arif Setiawan',company:'SMA Tunas Bangsa',phone:'0838-1120-5566',source:'WhatsApp',event:'Pentas seni',pax:400,date:'2026-11-27',budget:20000,stage:'Won',sales:'Sari Utami',score:80,loc:'SMA Tunas Bangsa',acts:[{t:'15 Nov',x:'Order ORD-2611-0418 terkonfirmasi'}]}
+    ],
+    quotes:[
+      {no:'Q-2026-0136',leadId:'L6',customer:'Yayasan Harapan',pkg:'nasibox',pax:300,addons:[],disc:5,ship:250000,date:'2026-12-20',status:'Terkirim',valid:'1 Des'},
+      {no:'Q-2026-0137',leadId:'L8',customer:'Hotel Bumi Asri',pkg:'prasmanan',pax:180,addons:['esbuah','dekor'],disc:0,ship:200000,date:'2026-12-05',status:'Disetujui',valid:'30 Nov'},
+      {no:'Q-2026-0139',leadId:'L2',customer:'Rina & Fajar',pkg:'wedding',pax:500,addons:['pramusaji'],disc:12,ship:500000,date:'2026-12-12',status:'Menunggu approval',valid:'3 Des'}
+    ],
+    orders:[
+      {no:'ORD-2611-0405',customer:'Dinas Pariwisata Kota',type:'Event',event:'Festival kuliner',date:'2026-11-15',time:'09:00',address:'Alun-alun Kota, Jl. Merdeka',pkg:'prasmanan',pax:350,addons:['esbuah'],disc:5,ship:350000,status:'Completed',paidPct:1,pic:'Sari Utami',terms:'DP 30% · pelunasan H+3'},
+      {no:'ORD-2611-0409',customer:'CV Mitra Tani',type:'One-time',event:'Panen raya',date:'2026-11-20',time:'11:00',address:'Gudang Mitra Tani, Ciawi',pkg:'nasibox',pax:300,addons:[],disc:0,ship:250000,status:'Completed',paidPct:1,pic:'Dimas Arya',terms:'DP 50% · lunas H-1'},
+      {no:'ORD-2611-0412',customer:'PT Kencana Energi',type:'Corporate',event:'Makan siang kantor',date:'2026-11-24',time:'11:30',address:'Menara Kencana Lt. 12, Sudirman',pkg:'corplunch',pax:180,addons:['puding'],disc:0,ship:0,status:'Dispatched',paidPct:0,pic:'Sari Utami',terms:'Termin 14 hari'},
+      {no:'ORD-2611-0413',customer:'Klinik Sehat Medika',type:'Event',event:'Seminar kesehatan',date:'2026-11-24',time:'13:00',address:'Aula Klinik Sehat, Jl. Pemuda 8',pkg:'snack',pax:250,addons:[],disc:0,ship:150000,status:'Ready',paidPct:.3,pic:'Dimas Arya',terms:'DP 30% · lunas saat kirim'},
+      {no:'ORD-2611-0415',customer:'Keluarga Wibowo',type:'One-time',event:'Aqiqah',date:'2026-11-25',time:'10:00',address:'Jl. Kenanga 21, Bogor',pkg:'nasibox',pax:150,addons:['esbuah'],disc:0,ship:100000,status:'In Production',paidPct:.5,pic:'Dimas Arya',terms:'DP 50%'},
+      {no:'ORD-2611-0418',customer:'SMA Tunas Bangsa',type:'Event',event:'Pentas seni',date:'2026-11-27',time:'08:00',address:'SMA Tunas Bangsa, Jl. Pajajaran',pkg:'snack',pax:400,addons:[],disc:0,ship:150000,status:'Confirmed',paidPct:.3,pic:'Sari Utami',terms:'DP 30%'},
+      {no:'ORD-2611-0420',customer:'PT Arunika Media',type:'Corporate',event:'Rapat kerja tahunan',date:'2026-11-28',time:'12:00',address:'Hotel Santika, Ballroom B',pkg:'prasmanan',pax:220,addons:['pramusaji'],disc:0,ship:300000,status:'Confirmed',paidPct:0,pic:'Sari Utami',terms:'DP 30% · H-3'},
+      {no:'ORD-2611-0422',customer:'Universitas Pelita',type:'Event',event:'Wisuda periode II',date:'2026-11-28',time:'10:00',address:'Gedung Serbaguna Univ. Pelita',pkg:'nasibox',pax:650,addons:[],disc:3,ship:400000,status:'Pending Approval',paidPct:0,pic:'Dimas Arya',terms:'DP 30%'},
+      {no:'ORD-2612-0101',customer:'Bank Mandala',type:'Recurring',event:'Lunch harian Sen–Jum',date:'2026-12-01',time:'11:30',address:'Bank Mandala KCU, Jl. Juanda',pkg:'corplunch',pax:150,addons:[],disc:0,ship:0,status:'Confirmed',paidPct:0,pic:'Sari Utami',terms:'Invoice mingguan'}
+    ].map(o=>this.mk(o)),
+    msgs:[
+      {to:'PT Kencana Energi',time:'10:42',tpl:'update_pengiriman',text:'Pesanan ORD-2611-0412 (180 pax) sedang dalam perjalanan. Estimasi tiba 11:20.',status:'Read'},
+      {to:'Bu Lestari',time:'09:15',tpl:'sambutan_lead',text:'Halo Bu Lestari, terima kasih sudah menghubungi Dapur Lestari Catering. Sales kami akan segera menghubungi.',status:'Delivered '},
+      {to:'Klinik Sehat Medika',time:'08:30',tpl:'reminder_dp',text:'Pengingat: sisa pembayaran ORD-2611-0413 jatuh tempo saat pengiriman hari ini.',status:'Delivered '},
+      {to:'Yayasan Harapan',time:'Kemarin',tpl:'quotation_terkirim',text:'Berikut penawaran Q-2026-0136 untuk 300 pax, berlaku hingga 1 Des.',status:'Read'},
+      {to:'CV Mitra Tani',time:'21 Nov',tpl:'permintaan_feedback',text:'Terima kasih atas pesanannya! Bagaimana pengalaman Anda? Balas 1–5.',status:'Failed'}
+    ]
+  };
+
+  rp(n){ return 'Rp'+Math.round(n).toLocaleString('id-ID'); }
+  d(s,y){ return new Date(s+'T00:00:00').toLocaleDateString('id-ID',y?{day:'numeric',month:'short',year:'numeric'}:{day:'numeric',month:'short'}); }
+  now(){ const t=new Date(); return '24 Nov, '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0'); }
+  calc(x){ const p=this.PKG[x.pkg]; const base=p.price*x.pax; let add=0; (x.addons||[]).forEach(a=>{const d=this.ADDON[a]; add+=d.per?d.price*x.pax:d.price;}); const sub=base+add; const disc=Math.round(sub*(x.disc||0)/100); const ship=+x.ship||0; const net=sub-disc+ship; const tax=Math.round(net*.11); return {base,add,sub,disc,ship,net,tax,total:net+tax}; }
+  cost(pkg,pax){ return Math.round(this.RECIPE[pkg].reduce((s,r)=>s+r[1]*this.ING[r[0]].price,0)*pax*1.05); }
+  need(pkg,pax){ return this.RECIPE[pkg].map(([k,q])=>({k,per:q,qty:+(q*pax*1.05).toFixed(1)})); }
+  chip(s){ return this.CHIP[s]||['#efede8','#55594f']; }
+  go(screen,extra){ this.setState({screen,selLead:null,selOrder:null,...(extra||{})}); }
+  flash(msg,tone){ this.setState({toast:{msg,tone}}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),3600); }
+  wa(key,to,tpl,text){ if(!this.state.tplOn[key]) return; const t=new Date(); const m={to,tpl,text,status:'Sent',time:String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')}; this.setState(s=>({msgs:[m,...s.msgs]})); setTimeout(()=>this.setState(s=>({msgs:s.msgs.map(x=>x===m?{...x,status:'Delivered '}:x)})),2500); }
+  cap(){ return this.props.capacity ?? 800; }
+  dl(){ return this.props.discLimit ?? 10; }
+  paxOn(date,ex){ return this.state.orders.filter(o=>o.date===date&&o.no!==ex&&o.status!=='Pending Approval').reduce((s,o)=>s+o.pax,0); }
+  upOrder(no,patch){ this.setState(s=>({orders:s.orders.map(o=>o.no===no?{...o,...patch,history:patch.status?[...o.history,{s:patch.status,t:this.now()}]:o.history}:o)})); }
+  upLead(id,patch,act){ this.setState(s=>({leads:s.leads.map(l=>l.id===id?{...l,...patch,acts:act?[{t:'24 Nov',x:act},...l.acts]:l.acts}:l)})); }
+  guess(l){ const e=l.event.toLowerCase(); if(/nikah|resepsi|wedding/.test(e))return 'wedding'; if(/snack|komite|pentas/.test(e))return 'snack'; if(/harian|corporate/.test(e))return 'corplunch'; return l.budget>=60000?'prasmanan':'nasibox'; }
+  openQuote(leadId){ const l=this.state.leads.find(x=>x.id===leadId)||this.state.leads.find(x=>!['Won','Lost'].includes(x.stage)); this.go('quote',{quoteMode:'build',qb:{leadId:l.id,pkg:this.guess(l),pax:l.pax,date:l.date,addons:[],disc:0,ship:200000}}); }
+  setQb(p){ this.setState(s=>({qb:{...s.qb,...p}})); }
+
+  saveQuote(draft){
+    const s=this.state, q=s.qb, l=s.leads.find(x=>x.id===q.leadId);
+    const status=draft?'Draft':(q.disc>this.dl()?'Menunggu approval':'Terkirim');
+    const no='Q-2026-0'+(140+s.quotes.length-3);
+    const nq={...q,pax:+q.pax,ship:+q.ship,no,customer:l.company&&l.company!=='Pribadi'&&l.company!=='Pasangan pengantin'?l.company:l.name,status,valid:'1 Des'};
+    this.setState({quotes:[nq,...s.quotes],quoteMode:'list'});
+    if(status==='Terkirim'){ this.upLead(l.id,{stage:'Quotation Sent'},'Quotation '+no+' dikirim via WhatsApp'); this.wa('quote',nq.customer,'quotation_terkirim','Berikut penawaran '+no+' untuk '+nq.pax+' pax senilai '+this.rp(this.calc(nq).total)+'.'); this.flash(no+' terkirim via WhatsApp ke '+l.name); }
+    else if(status==='Menunggu approval'){ this.upLead(l.id,{},'Quotation '+no+' menunggu approval diskon'); this.flash('Diskon '+q.disc+'% melebihi batas '+this.dl()+'% — menunggu approval Sales Manager','warn'); }
+    else this.flash(no+' disimpan sebagai draft');
+  }
+  quoteAct(q){
+    const set=p=>this.setState(s=>({quotes:s.quotes.map(x=>x.no===q.no?{...x,...p}:x)}));
+    const send=()=>{ set({status:'Terkirim'}); this.upLead(q.leadId,{stage:'Quotation Sent'},'Quotation '+q.no+' dikirim'); this.wa('quote',q.customer,'quotation_terkirim','Berikut penawaran '+q.no+' untuk '+q.pax+' pax senilai '+this.rp(this.calc(q).total)+'.'); };
+    if(q.status==='Draft'){ if(q.disc>this.dl()){ set({status:'Menunggu approval'}); this.flash('Butuh approval diskon','warn'); } else { send(); this.flash(q.no+' terkirim'); } }
+    else if(q.status==='Menunggu approval'){ send(); this.flash('Diskon '+q.disc+'% disetujui Sales Manager — '+q.no+' dikirim ke customer'); }
+    else if(q.status==='Terkirim'){ set({status:'Disetujui'}); this.upLead(q.leadId,{stage:'Negotiation'},'Customer menyetujui '+q.no); this.flash('Customer menyetujui '+q.no+'. Siap dikonversi ke order.'); }
+    else if(q.status==='Disetujui') this.convert(q);
+    else if(q.status==='Dikonversi') this.go('order',{selOrder:q.orderNo});
+  }
+  convert(q){
+    const s=this.state, l=s.leads.find(x=>x.id===q.leadId)||{};
+    const over=this.paxOn(q.date)+q.pax>this.cap();
+    const no='ORD-'+q.date.slice(2,4)+q.date.slice(5,7)+'-0'+(430+s.orders.length);
+    const status=over?'Pending Approval':'Confirmed';
+    const o={no,customer:q.customer,type:q.pkg==='wedding'?'Wedding':'Event',event:l.event||'Acara',date:q.date,time:'11:00',address:l.loc||'—',pkg:q.pkg,pax:q.pax,addons:q.addons,disc:q.disc,ship:q.ship,status,paid:0,pic:l.sales||'—',terms:'DP 30% · pelunasan H-1',quote:q.no,history:[{s:'Draft',t:this.now()},{s:status,t:this.now()}]};
+    this.setState({orders:[...s.orders,o],quotes:s.quotes.map(x=>x.no===q.no?{...x,status:'Dikonversi',orderNo:no}:x)});
+    if(l.id) this.upLead(l.id,{stage:'Won'},'Dikonversi menjadi order '+no);
+    if(!over) this.wa('confirm',q.customer,'konfirmasi_pesanan','Pesanan '+no+' untuk '+this.d(q.date)+' ('+q.pax+' pax) terkonfirmasi. Invoice DP 30% terlampir.');
+    this.go('order',{selOrder:no});
+    this.flash(over?no+' dibuat — melebihi kapasitas '+this.d(q.date)+', butuh approval GM':no+' terkonfirmasi. Invoice & rencana produksi dibuat otomatis.',over?'warn':null);
+  }
+  startProd(o){
+    const s=this.state, short=this.need(o.pkg,o.pax).filter(n=>s.stock[n.k]<n.qty);
+    if(short.length){ this.flash('Stok kurang: '+short.map(n=>this.ING[n.k].name).join(', ')+'. Buat purchase request dulu.','err'); return; }
+    const st={...s.stock}; this.need(o.pkg,o.pax).forEach(n=>st[n.k]=+(st[n.k]-n.qty).toFixed(1));
+    this.setState({stock:st}); this.upOrder(o.no,{status:'In Production'});
+    this.wa('prod',o.customer,'update_produksi','Pesanan '+o.no+' mulai diproduksi dapur kami.');
+    this.flash('Bahan dikeluarkan dari stok (stock movement tercatat). '+o.no+' masuk produksi.');
+  }
+  advance(o){
+    const t=this.calc(o).total;
+    if(o.status==='Pending Approval'){ this.upOrder(o.no,{status:'Confirmed'}); this.wa('confirm',o.customer,'konfirmasi_pesanan','Pesanan '+o.no+' terkonfirmasi.'); this.flash('Disetujui General Manager. '+o.no+' Confirmed — stok direservasi.'); }
+    else if(o.status==='Confirmed') this.startProd(o);
+    else if(o.status==='In Production'){ const c=this.state.checks[o.no]||[]; if(c.filter(Boolean).length<4){ this.flash('Lengkapi checklist dapur & QC dulu ('+c.filter(Boolean).length+'/4).','warn'); this.go('prod',{prodSel:o.no}); return; } this.upOrder(o.no,{status:'Ready'}); this.flash('QC lulus. '+o.no+' siap dikirim.'); }
+    else if(o.status==='Ready'){ this.upOrder(o.no,{status:'Dispatched'}); this.wa('prod',o.customer,'update_pengiriman','Pesanan '+o.no+' sedang dalam perjalanan.'); this.flash(o.no+' dikirim. Customer diberi notifikasi.'); }
+    else if(o.status==='Dispatched'){ this.upOrder(o.no,{status:'Delivered'}); this.flash('Bukti serah terima tercatat untuk '+o.no+'.'); }
+    else if(o.status==='Delivered'){ if(o.paid<t){ this.flash('Invoice belum lunas (sisa '+this.rp(t-o.paid)+'). Catat pelunasan dulu.','warn'); return; } this.upOrder(o.no,{status:'Completed'}); this.wa('done',o.customer,'permintaan_feedback','Terima kasih! Anda mendapat '+Math.floor(this.calc(o).net/10000)+' poin loyalty. Bagaimana pengalaman Anda?'); this.flash('Order selesai. +'+Math.floor(this.calc(o).net/10000)+' poin loyalty untuk '+o.customer+'.'); }
+  }
+
+  renderVals(){
+    const s=this.state, CAP=this.cap(), DL=this.dl(), ING=this.ING, PKG=this.PKG;
+    const rp=n=>this.rp(n), d=x=>this.d(x), idx=o=>this.ST.indexOf(o.status);
+    const reserved={}; Object.keys(ING).forEach(k=>reserved[k]=0);
+    s.orders.filter(o=>o.status==='Confirmed').forEach(o=>this.need(o.pkg,o.pax).forEach(n=>reserved[n.k]+=n.qty));
+    const openPr=new Set(); s.prs.filter(p=>p.status!=='Diterima').forEach(p=>p.items.forEach(i=>openPr.add(i.k)));
+    const invData=Object.keys(ING).map(k=>{const st=s.stock[k],res=+reserved[k].toFixed(1),av=+(st-res).toFixed(1),mn=ING[k].min;return {k,st,res,av,mn,lvl:av<0?2:av<mn?1:0,pr:openPr.has(k)};});
+    const shortItems=invData.filter(x=>x.lvl>0&&!x.pr);
+    const pendingDisc=s.quotes.filter(q=>q.status==='Menunggu approval');
+    const pendingOrd=s.orders.filter(o=>o.status==='Pending Approval');
+    const live=s.orders.filter(o=>idx(o)>=2);
+    const dpPending=live.filter(o=>o.paid===0&&o.status!=='Completed');
+    const newLeads=s.leads.filter(l=>l.stage==='New Lead');
+    const fin=live.map(o=>({o,c:this.calc(o),cost:this.cost(o.pkg,o.pax)}));
+    const nov=fin.filter(f=>f.o.date.startsWith('2026-11'));
+    const revNov=nov.reduce((a,f)=>a+f.c.net,0), costNov=nov.reduce((a,f)=>a+f.cost,0);
+    const piutang=fin.reduce((a,f)=>a+Math.max(0,f.c.total-f.o.paid),0), kas=fin.reduce((a,f)=>a+f.o.paid,0);
+    const openLeads=s.leads.filter(l=>!['Won','Lost'].includes(l.stage));
+    const pipeVal=openLeads.reduce((a,l)=>a+l.pax*l.budget,0);
+    const short=n=>n>=1e6?'Rp'+(n/1e6).toLocaleString('id-ID',{maximumFractionDigits:1})+' jt':rp(n);
+    const sel=(on)=>on?{bg:'#e9f4e6',border:'#b5d8ae',fg:'#1f6b2b'}:{bg:'#fff',border:'#dcd9d1',fg:'#2a2e27'};
+
+    const I={home:'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',users:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75',pipe:'M4 4h4v16H4zM10 4h4v10h-4zM16 4h4v6h-4z',menu:'M3 2v7a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6a2 2 0 0 0 2 2h3zm0 0v7',quote:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',cal:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',prod:'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z',inv:'M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8',fin:'M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v3M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3M21 12h-4a2 2 0 0 0 0 4h4z',wa:'M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l1.9-5.7A8.4 8.4 0 1 1 21 11.5z',star:'M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.2-6.2 3.2L7 14.2 2 9.3l6.9-1z',rep:'M3 3v18h18M7 16v-5M12 16V8M17 16v-8',check:'M9 2h6v3H9zM8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2M9 14l2 2 4-4',alert:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 8v4M12 16h.01',clock:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2'};
+    const N=(key,label,icon,badge,dis)=>{const a=s.screen===key;return {key,label,icon,bg:a?'#e9f4e6':'transparent',color:dis?'#a3a69d':a?'#1f6b2b':'#2a2e27',border:a?'#b5d8ae':'transparent',fw:a?'700':'500',badge,hasBadge:!!badge,disabled:!!dis,onClick:dis?()=>this.flash('Modul ini prioritas P1 — belum termasuk prototipe MVP.'):()=>this.go(key,key==='quote'?{quoteMode:'list'}:null)};};
+    const navGroups=[
+      {hasLabel:false,items:[N('dash','Beranda',I.home)]},
+      {hasLabel:true,label:'PENJUALAN',items:[N('cust','Pelanggan',I.users),N('pipe','Lead & pipeline',I.pipe,newLeads.length),N('menu','Menu & paket',I.menu),N('quote','Quotation',I.quote,pendingDisc.length),N('order','Order & booking',I.cal,pendingOrd.length)]},
+      {hasLabel:true,label:'OPERASIONAL',items:[N('prod','Produksi',I.prod),N('inv','Persediaan & pembelian',I.inv,shortItems.length)]},
+      {hasLabel:true,label:'KEUANGAN & PELANGGAN',items:[N('fin','Keuangan',I.fin,dpPending.length),N('wa','WhatsApp center',I.wa),N('loy','Loyalty & reward',I.star,0,true),N('rep','Laporan',I.rep,0,true)]}
+    ];
+    const is={}; ['dash','cust','pipe','menu','order','prod','inv','fin','wa'].forEach(k=>is[k]=s.screen===k);
+    is.quoteList=s.screen==='quote'&&s.quoteMode==='list'; is.quoteBuild=s.screen==='quote'&&s.quoteMode==='build'&&!!s.qb;
+
+    const openOrder=no=>()=>this.setState({selOrder:no,selLead:null});
+    const AC=(n,title,sub,icon,key)=>({n,title,sub,icon,iconBg:n?'#fdf1d8':'#f1f0ec',iconFg:n?'#9a6200':'#55594f',numFg:n?'#1c1f1a':'#a3a69d',onClick:()=>this.go(key,key==='quote'?{quoteMode:'list'}:null)});
+    const actionCards=[AC(pendingDisc.length,'Approval diskon','quotation melebihi batas '+DL+'%',I.check,'quote'),AC(pendingOrd.length,'Order di luar kapasitas','butuh persetujuan GM',I.alert,'order'),AC(shortItems.length,'Bahan perlu dibeli','tersedia di bawah minimum',I.inv,'inv'),AC(dpPending.length,'DP belum diterima','invoice order terkonfirmasi',I.clock,'fin'),AC(newLeads.length,'Lead baru','belum dihubungi sales',I.users,'pipe')];
+    const totalAct=actionCards.reduce((a,c)=>a+c.n,0);
+    const todayList=s.orders.filter(o=>(o.date==='2026-11-24'||o.date==='2026-11-25')&&o.status!=='Completed').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+    const row=o=>{const c=this.chip(o.status),t=this.calc(o).total;return {no:o.no,customer:o.customer,event:o.event,type:o.type,dateLabel:o.date==='2026-11-24'?'Hari ini':o.date==='2026-11-25'?'Besok':d(o.date),time:o.time,pax:o.pax,pkgName:PKG[o.pkg].name,total:rp(t),status:o.status,chipBg:c[0],chipFg:c[1],payLabel:idx(o)<2?'—':o.paid>=t?'Lunas':o.paid>0?'DP '+Math.round(o.paid/t*100)+'%':'Belum bayar',payFg:o.paid>=t?'#1f6b2b':o.paid>0?'#7a4f00':idx(o)<2?'#a3a69d':'#8f2a1c',open:openOrder(o.no)};};
+    const won=s.leads.filter(l=>l.stage==='Won').length;
+    const funnel=this.STAGES.slice(0,6).map(st=>{const n=s.leads.filter(l=>l.stage===st).length;return {label:st,n,w:Math.max(4,n/Math.max(1,s.leads.length)*100*2.2)+'%'};});
+
+    const cols=this.STAGES.map((st,i)=>{const ls=s.leads.filter(l=>l.stage===st);return {label:st,n:ls.length,dot:['#a3a69d','#5b8bd6','#2a9d8f','#d99a1e','#c2672e','#2e8136','#c8402f'][i],value:'Potensi '+short(ls.reduce((a,l)=>a+l.pax*l.budget,0)),leads:ls.map(l=>({name:l.name,sub:l.company,event:l.event,meta:l.pax+' pax · '+d(l.date),score:l.score,scoreBg:l.score>=75?'#d5ead0':l.score>=55?'#fdf1d8':'#f1f0ec',scoreFg:l.score>=75?'#17521f':l.score>=55?'#7a4f00':'#55594f',source:l.source,ini:l.sales.split(' ').map(w=>w[0]).join(''),open:()=>this.setState({selLead:l.id,note:''})}))};});
+
+    const custMap={};
+    s.orders.forEach(o=>{const m=custMap[o.customer]||(custMap[o.customer]={name:o.customer,type:o.type,count:0,spend:0});m.count++;if(o.status==='Completed')m.spend+=this.calc(o).net;});
+    const phones={'Dinas Pariwisata Kota':'0251-832-100','CV Mitra Tani':'0812-7781-0021','PT Kencana Energi':'021-5790-1188','Klinik Sehat Medika':'0251-871-221','Keluarga Wibowo':'0813-2211-7788','SMA Tunas Bangsa':'0838-1120-5566','PT Arunika Media':'021-2930-4411','Universitas Pelita':'0251-860-500','Bank Mandala':'021-345-6789','Hotel Bumi Asri':'0815-7781-3300','Yayasan Harapan':'0812-6612-0090','Rina & Fajar':'0813-5520-9912'};
+    const custRows=Object.values(custMap).map(c=>{const tier=c.spend>=50e6?'Platinum':c.spend>=20e6?'Gold':c.spend>=5e6?'Silver':'Regular';const tc={Platinum:['#e8e4f6','#4a3b8f'],Gold:['#f6ecd6','#8a5a00'],Silver:['#ecedef','#4a4f57'],Regular:['#f1f0ec','#55594f']}[tier];return {...c,ini:c.name.replace(/^(PT|CV) /,'').split(' ').slice(0,2).map(w=>w[0]).join(''),phone:phones[c.name]||'—',spend:rp(c.spend),tier,tierBg:tc[0],tierFg:tc[1],pts:Math.floor(c.spend/10000).toLocaleString('id-ID')};}).sort((a,b)=>b.count-a.count);
+
+    const pkgCards=Object.keys(PKG).map(k=>{const p=PKG[k],c=this.cost(k,1);return {cat:p.cat,name:p.name,desc:p.desc,min:p.min,price:rp(p.price),cost:rp(c),margin:Math.round((1-c/p.price)*100)+'%',bom:this.RECIPE[k].map(([i,q])=>ING[i].name.split(' ')[0]+' '+Math.round(q*1000)+'g').join(' · ')};});
+
+    const QA={'Draft':['Kirim','#1f6b2b','#fff','#1f6b2b'],'Menunggu approval':['Setujui diskon','#d99a1e','#fff','#d99a1e'],'Terkirim':['Customer setuju','#fff','#1c1f1a','#dcd9d1'],'Disetujui':['Konversi ke order','#1f6b2b','#fff','#1f6b2b'],'Dikonversi':['Lihat order →','#fff','#1f6b2b','#b5d8ae']};
+    const quoteRows=s.quotes.map(q=>{const c=this.chip(q.status),a=QA[q.status];return {no:q.no,customer:q.customer,dateLabel:d(q.date),disc:q.disc,pkgName:PKG[q.pkg].name,pax:q.pax,total:rp(this.calc(q).total),valid:q.valid,status:q.status,chipBg:c[0],chipFg:c[1],actLabel:a[0],btnBg:a[1],btnFg:a[2],btnBorder:a[3],act:()=>this.quoteAct(q)};});
+
+    let qb={}, leadOptions=[];
+    if(s.qb){
+      const q=s.qb, c=this.calc({...q,pax:+q.pax||0}), pax=+q.pax||0, cost=this.cost(q.pkg,pax), mg=c.net?Math.round((1-cost/c.net)*100):0;
+      const used=this.paxOn(q.date), over=used+pax>CAP, minW=pax<PKG[q.pkg].min, discW=q.disc>DL;
+      const warns=[]; if(minW)warns.push('Minimum '+PKG[q.pkg].name+' adalah '+PKG[q.pkg].min+' pax.'); if(discW)warns.push('Diskon '+q.disc+'% di atas batas '+DL+'% — perlu approval Sales Manager sebelum terkirim.');
+      leadOptions=s.leads.filter(l=>!['Won','Lost'].includes(l.stage)).map(l=>({id:l.id,label:l.name+' — '+l.event}));
+      const lines=[{label:PKG[q.pkg].name+' × '+pax,value:rp(c.base)}]; if(c.add)lines.push({label:'Add-on',value:rp(c.add)}); if(c.disc)lines.push({label:'Diskon '+q.disc+'%',value:'−'+rp(c.disc)}); lines.push({label:'Ongkos kirim',value:rp(c.ship)}); lines.push({label:'PPN 11%',value:rp(c.tax)});
+      qb={leadId:q.leadId,date:q.date,pax:q.pax,disc:q.disc,ship:q.ship,paxBorder:minW?'#d99a1e':'#dcd9d1',
+        capNote:'Kapasitas '+d(q.date)+': '+used+' pax terpakai + '+pax+' pax ini = '+(used+pax)+' / '+CAP+(over?' — melebihi kapasitas, order akan butuh approval GM.':' — tersedia.'),capFg:over?'#8f2a1c':'#1f6b2b',
+        pkgs:Object.keys(PKG).map(k=>{const a=q.pkg===k;return {cat:PKG[k].cat,name:PKG[k].name,price:rp(PKG[k].price),border:a?'#2e8136':'#e6e4dd',bg:a?'#f2f8f0':'#fff',onClick:()=>this.setQb({pkg:k})};}),
+        addons:Object.keys(this.ADDON).map(k=>{const a=q.addons.includes(k),x=this.ADDON[k],st=sel(a);return {label:x.name+' · '+rp(x.price)+(x.per?'/pax':''),mark:a?'✓':'+',border:st.border,bg:st.bg,fg:st.fg,onClick:()=>this.setQb({addons:a?q.addons.filter(z=>z!==k):[...q.addons,k]})};}),
+        lines,total:rp(c.total),cost:rp(cost),margin:mg+'%',marginFg:mg>=60?'#1f6b2b':mg>=45?'#7a4f00':'#8f2a1c',hasWarn:warns.length>0,warn:warns.join(' '),
+        summary:PKG[q.pkg].cat+' · '+pax+' pax · '+d(q.date,true),sendLabel:discW?'Ajukan approval diskon':'Kirim via WhatsApp',
+        onLead:e=>{const l=s.leads.find(x=>x.id===e.target.value);this.setQb({leadId:l.id,pax:l.pax,date:l.date,pkg:this.guess(l)});},
+        onDate:e=>this.setQb({date:e.target.value}),onPax:e=>this.setQb({pax:e.target.value}),onDisc:e=>this.setQb({disc:+e.target.value}),onShip:e=>this.setQb({ship:e.target.value}),
+        saveDraft:()=>this.saveQuote(true),send:()=>{if(minW){this.flash('Pax di bawah minimum paket.','err');return;}this.saveQuote(false);}};
+    }
+
+    const F=s.orderFilter, FD={'Semua':()=>true,'Aktif':o=>idx(o)>=2&&o.status!=='Completed','Butuh approval':o=>o.status==='Pending Approval','Selesai':o=>o.status==='Completed'};
+    const filterChips=Object.keys(FD).map(k=>{const st=sel(F===k);return {label:k,n:s.orders.filter(FD[k]).length,bg:st.bg,border:st.border,fg:st.fg,onClick:()=>this.setState({orderFilter:k})};});
+    const orderRows=s.orders.filter(FD[F]).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(row);
+    const viewTabs=[['list','Daftar'],['cal','Kalender']].map(([k,l])=>({label:l,bg:s.orderView===k?'#fff':'transparent',shadow:s.orderView===k?'0 1px 3px rgba(0,0,0,.1)':'none',onClick:()=>this.setState({orderView:k})}));
+    const m=s.calMonth, y=2026, first=new Date(y,m,1), off=(first.getDay()+6)%7, days=new Date(y,m+1,0).getDate(), cells=[];
+    for(let i=0;i<off;i++)cells.push({day:'',bg:'#faf9f6',border:'transparent',dayFg:'#a3a69d',usedLabel:'',hasBar:false,orders:[],pct:'0%',barColor:'#a3a69d'});
+    for(let dd=1;dd<=days;dd++){const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(dd).padStart(2,'0');const os=s.orders.filter(o=>o.date===iso);const used=os.reduce((a,o)=>a+o.pax,0);const over=used>CAP;const bc=over?'#c8402f':used>CAP*.75?'#d99a1e':'#2e8136';const today=iso==='2026-11-24';
+      cells.push({day:dd,bg:over?'#fdf3f1':'#fff',border:today?'#2e8136':over?'#f0c2b9':'#ebe9e3',dayFg:today?'#1f6b2b':'#1c1f1a',usedLabel:used?used+'/'+CAP:'',hasBar:used>0,pct:Math.min(100,used/CAP*100)+'%',barColor:bc,orders:os.map(o=>{const c=this.chip(o.status);return {label:o.customer.replace(/^(PT|CV) /,'')+' · '+o.pax,bg:c[0],fg:c[1],open:openOrder(o.no)};})});}
+    const cal={label:first.toLocaleDateString('id-ID',{month:'long',year:'numeric'}),week:['SEN','SEL','RAB','KAM','JUM','SAB','MIN'],cells,prev:()=>this.setState({calMonth:Math.max(10,m-1)}),next:()=>this.setState({calMonth:Math.min(11,m+1)})};
+
+    const prodOrders=s.orders.filter(o=>['Confirmed','In Production','Ready'].includes(o.status)).sort((a,b)=>a.date.localeCompare(b.date));
+    const psO=prodOrders.find(o=>o.no===s.prodSel)||prodOrders[0];
+    const prodList=prodOrders.map(o=>{const c=this.chip(o.status);return {no:o.no,customer:o.customer,dateLabel:d(o.date),pkgName:PKG[o.pkg].name,pax:o.pax,status:o.status,chipBg:c[0],chipFg:c[1],border:psO&&psO.no===o.no?'#2e8136':'#ebe9e3',onClick:()=>this.setState({prodSel:o.no})};});
+    let ps={};
+    if(psO){const ck=s.checks[psO.no]||[false,false,false,false];const deducted=psO.status!=='Confirmed';const needs=this.need(psO.pkg,psO.pax).map(n=>{const ok=deducted||s.stock[n.k]>=n.qty;return {name:ING[n.k].name,per:Math.round(n.per*1000)+' g',qty:n.qty.toLocaleString('id-ID')+' kg',stock:s.stock[n.k].toLocaleString('id-ID')+' kg',label:deducted?'Dikeluarkan':ok?'Cukup':'Kurang '+(n.qty-s.stock[n.k]).toFixed(1)+' kg',bg:deducted?'#efede8':ok?'#d5ead0':'#fbe4df',fg:deducted?'#55594f':ok?'#17521f':'#8f2a1c',ok};});
+      const BL={'Confirmed':['Mulai produksi','#1f6b2b'],'In Production':['QC lulus → Ready','#0f6b5c']}[psO.status];
+      ps={no:psO.no,customer:psO.customer,pkgName:PKG[psO.pkg].name,pax:psO.pax,dateLabel:d(psO.date),time:psO.time,cost:rp(this.cost(psO.pkg,psO.pax)),needs,short:needs.some(n=>!n.ok),hasBtn:!!BL,btnLabel:BL?BL[0]:'',btnBg:BL?BL[1]:'#1f6b2b',onNext:()=>this.advance(psO),
+        checks:['Bahan disiapkan','Proses masak','Packing & label','QC rasa & suhu'].map((l,i)=>{const on=ck[i];return {label:l,mark:on?'✓':'',boxBg:on?'#2e8136':'#fff',boxBorder:on?'#2e8136':'#c9c6bd',onClick:()=>{if(psO.status==='Confirmed'){this.flash('Mulai produksi dulu untuk mengisi checklist.','warn');return;}const n=[...ck];n[i]=!n[i];this.setState({checks:{...s.checks,[psO.no]:n}});}};})};}
+
+    const invRows=invData.map(x=>{const L=x.pr&&x.lvl?['Menunggu PO','#e3edfb','#1f4f9a']:x.lvl===2?['Kurang untuk order','#fbe4df','#8f2a1c']:x.lvl===1?['Di bawah minimum','#fdf1d8','#7a4f00']:['Aman','#d5ead0','#17521f'];return {name:ING[x.k].name,st:x.st.toLocaleString('id-ID')+' kg',res:x.res.toLocaleString('id-ID')+' kg',av:x.av.toLocaleString('id-ID')+' kg',avFg:x.av<0?'#8f2a1c':'#1c1f1a',mn:x.mn+' kg',exp:ING[x.k].exp,label:L[0],bg:L[1],fg:L[2]};});
+    const prRows=s.prs.map(p=>{const st=p.status==='Menunggu PO'?'Menunggu PO':p.status;const c=this.chip(st);const A={'Menunggu PO':['Setujui & terbitkan PO',()=>{this.setState(z=>({prs:z.prs.map(x=>x.no===p.no?{...x,status:'PO diterbitkan',po:'PO-2611-0'+(60+z.prs.length)}:x)}));this.flash('PO diterbitkan ke '+p.supplier+'.');}],'PO diterbitkan':['Catat penerimaan barang',()=>{const st2={...this.state.stock};p.items.forEach(i=>st2[i.k]=+(st2[i.k]+i.qty).toFixed(1));this.setState(z=>({stock:st2,prs:z.prs.map(x=>x.no===p.no?{...x,status:'Diterima'}:x)}));this.flash('Goods receipt tercatat. Stok bertambah, batch baru dibuat.');}]}[p.status];
+      return {no:p.no+(p.po?' · '+p.po:''),status:st,chipBg:c[0],chipFg:c[1],items:p.items.map(i=>ING[i.k].name+' '+i.qty+' kg').join(' · '),meta:'Supplier '+p.supplier+' · estimasi '+rp(p.items.reduce((a,i)=>a+i.qty*ING[i.k].price,0)),hasAct:!!A,actLabel:A?A[0]:'',act:A?A[1]:null};});
+    const makePR=()=>{const items=shortItems.map(x=>({k:x.k,qty:Math.ceil(x.mn-x.av)}));this.setState(z=>({prs:[{no:'PR-2611-0'+(31+z.prs.length),items,status:'Menunggu PO',supplier:'CV Pangan Segar'},...z.prs]}));this.flash('Purchase request dibuat untuk '+items.length+' bahan — menunggu approval Purchasing.');};
+
+    const invoiceRows=fin.map(({o,c})=>{const out=Math.max(0,c.total-o.paid),st=o.paid>=c.total?'Lunas':o.paid>0?'DP / sebagian':'Belum bayar',ch=this.chip(st);return {inv:'INV-'+o.no.slice(4),customer:o.customer,terms:o.terms,total:rp(c.total),paid:rp(o.paid),out:rp(out),due:d(o.date),status:st,chipBg:ch[0],chipFg:ch[1],hasOut:out>0,onPay:()=>this.setState({pay:{no:o.no,amt:'',method:'Transfer BCA'}})};});
+    const profitRows=fin.map(({o,c,cost})=>{const gp=c.net-cost,mg=Math.round(gp/c.net*100);return {no:o.no,customer:o.customer,rev:rp(c.net),cost:rp(cost),gp:rp(gp),margin:mg+'%',w:mg+'%'};});
+    const finKpis=[{label:'Revenue November',value:short(revNov),sub:nov.length+' order (sebelum PPN)',subFg:'#6b6f66'},{label:'Kas masuk',value:short(kas),sub:'dari '+fin.filter(f=>f.o.paid>0).length+' invoice',subFg:'#1f6b2b'},{label:'Piutang',value:short(piutang),sub:dpPending.length+' invoice belum dibayar',subFg:'#8f2a1c'},{label:'Food cost %',value:Math.round(costNov/Math.max(1,revNov)*100)+'%',sub:'target < 35%',subFg:'#6b6f66'}];
+
+    const msgRows=s.msgs.map(x=>{const c=this.chip(x.status);return {...x,status:x.status.trim(),chipBg:c[0],chipFg:c[1]};});
+    const TPL=[['lead','New lead','sambutan_lead'],['quote','Quotation sent','quotation_terkirim'],['expire','Quotation expiring','reminder_penawaran'],['confirm','Order confirmed','konfirmasi_pesanan'],['dp','DP pending / received','pembayaran_diterima'],['prod','Produksi / pengiriman','update_pengiriman'],['done','Order completed','permintaan_feedback'],['inactive','Customer inactive (opt-in)','kampanye_repeat_order']];
+    const tplRows=TPL.map(([k,t,n])=>{const on=s.tplOn[k];return {trigger:t,name:n,trackBg:on?'#2e8136':'#d4d1c9',knobLeft:on?'21px':'3px',onToggle:()=>this.setState({tplOn:{...s.tplOn,[k]:!on}})};});
+
+    let ld={}; const L=s.leads.find(l=>l.id===s.selLead);
+    if(L){ld={name:L.name,company:L.company,phone:L.phone,source:L.source.toUpperCase(),score:L.score,scoreW:L.score+'%',acts:L.acts,
+      facts:[{k:'Acara',v:L.event},{k:'Tanggal',v:d(L.date,true)},{k:'Jumlah pax',v:L.pax+' pax'},{k:'Budget/pax',v:rp(L.budget)},{k:'Potensi nilai',v:rp(L.pax*L.budget)},{k:'Sales',v:L.sales},{k:'Lokasi',v:L.loc}],
+      stages:this.STAGES.map(st=>{const a=L.stage===st,x=sel(a);return {label:st,bg:x.bg,border:x.border,fg:x.fg,onClick:()=>{this.upLead(L.id,{stage:st},'Tahap dipindah ke '+st);}};}),
+      markLost:()=>{this.upLead(L.id,{stage:'Lost'},'Ditandai lost');this.setState({selLead:null});this.flash(L.name+' ditandai lost.');},makeQuote:()=>this.openQuote(L.id)};}
+
+    let od={}; const O=s.orders.find(o=>o.no===s.selOrder);
+    if(O){const c=this.calc(O),ch=this.chip(O.status),i=idx(O),cost=this.cost(O.pkg,O.pax),gp=c.net-cost,used=this.paxOn(O.date,O.no);
+      const NX={'Pending Approval':['Setujui di luar kapasitas (GM)','#d99a1e'],'Confirmed':['Mulai produksi','#1f6b2b'],'In Production':['QC lulus → Ready','#0f6b5c'],'Ready':['Dispatch pengiriman','#5a3fa8'],'Dispatched':['Konfirmasi terkirim (serah terima)','#1f6b2b'],'Delivered':['Selesaikan order','#17521f']}[O.status];
+      let warn='',wb='#fdf1d8',wf='#7a4f00';
+      if(O.status==='Pending Approval')warn='Total pax '+d(O.date)+': '+used+' terkonfirmasi + '+O.pax+' order ini = '+(used+O.pax)+' dari kapasitas '+CAP+'. Perlu approval General Manager (BR-003).';
+      else if(O.status==='Confirmed'){const sh=this.need(O.pkg,O.pax).filter(n=>s.stock[n.k]<n.qty);if(sh.length){warn='Stok kurang untuk produksi: '+sh.map(n=>ING[n.k].name).join(', ')+'. Buat purchase request di Persediaan.';wb='#fbe4df';wf='#8f2a1c';}}
+      else if(O.status==='Delivered'&&O.paid<c.total)warn='Invoice belum lunas — order tidak bisa diselesaikan sebelum pelunasan.';
+      od={no:O.no,customer:O.customer,type:O.type,event:O.event,status:O.status,chipBg:ch[0],chipFg:ch[1],inv:'INV-'+O.no.slice(4),
+        segs:this.ST.map((st,j)=>({label:st,bg:j<=i?'#2e8136':'#e6e4dd'})),stepLabel:'Langkah '+(i+1)+' dari 8 · '+(this.ST[i+1]?'berikutnya: '+this.ST[i+1]:'selesai'),
+        hasWarn:!!warn,warn,warnBg:wb,warnFg:wf,
+        facts:[{k:'Tanggal & jam',v:d(O.date,true)+', '+O.time},{k:'Paket',v:PKG[O.pkg].name},{k:'Pax',v:O.pax+' porsi'},{k:'Add-on',v:O.addons.length?O.addons.map(a=>this.ADDON[a].name).join(', '):'—'},{k:'Alamat',v:O.address},{k:'PIC sales',v:O.pic},{k:'Termin',v:O.terms},{k:'Referensi',v:O.quote||'Input manual'}],
+        lines:[{label:'Subtotal',value:rp(c.sub)},{label:'Diskon',value:c.disc?'−'+rp(c.disc):'—'},{label:'Ongkos kirim',value:rp(c.ship)},{label:'PPN 11%',value:rp(c.tax)}],
+        total:rp(c.total),paid:rp(O.paid),out:rp(Math.max(0,c.total-O.paid)),payW:Math.min(100,O.paid/c.total*100)+'%',canPay:i>=2&&O.paid<c.total,onPay:()=>this.setState({pay:{no:O.no,amt:'',method:'Transfer BCA'}}),
+        profit:[{k:'Food cost',v:rp(cost)},{k:'Gross profit',v:rp(gp)},{k:'Margin',v:Math.round(gp/c.net*100)+'%'}],
+        history:[...O.history].reverse(),hasNext:!!NX,nextLabel:NX?NX[0]:'',nextBg:NX?NX[1]:'#1f6b2b',onNext:()=>this.advance(O)};}
+
+    let pay={}; const PO=s.pay&&s.orders.find(o=>o.no===s.pay.no);
+    if(PO){const c=this.calc(PO),out=c.total-PO.paid;
+      pay={inv:'INV-'+PO.no.slice(4),customer:PO.customer,out:rp(out),amt:s.pay.amt,
+        quick:[...(PO.paid===0?[{label:'DP 30% · '+rp(Math.round(c.total*.3)),onClick:()=>this.setState({pay:{...s.pay,amt:Math.round(c.total*.3)}})}]:[]),{label:'Lunasi · '+rp(out),onClick:()=>this.setState({pay:{...s.pay,amt:out}})}],
+        methods:['Transfer BCA','Transfer Mandiri','QRIS','Tunai'].map(mt=>{const x=sel(s.pay.method===mt);return {label:mt,bg:x.bg,border:x.border,fg:x.fg,onClick:()=>this.setState({pay:{...s.pay,method:mt}})};}),
+        onAmt:e=>this.setState({pay:{...s.pay,amt:e.target.value}}),
+        save:()=>{const a=Math.min(out,+s.pay.amt||0);if(a<=0){this.flash('Isi nominal pembayaran.','err');return;}this.upOrder(PO.no,{paid:PO.paid+a});this.setState({pay:null});this.wa('dp',PO.customer,'pembayaran_diterima','Pembayaran '+rp(a)+' untuk '+PO.no+' via '+s.pay.method+' telah kami terima. Terima kasih!');this.flash('Pembayaran '+rp(a)+' tercatat ('+s.pay.method+'). '+(PO.paid+a>=c.total?'Invoice lunas.':'Sisa '+rp(c.total-PO.paid-a)+'.'));}};}
+
+    const lf=s.lf||{}; const setLf=k=>e=>this.setState({lf:{...this.state.lf,[k]:e.target.value}});
+    const lfFields=[['name','Nama kontak','text','mis. Budi Santoso'],['company','Perusahaan / instansi','text','opsional'],['phone','No. WhatsApp','text','08…'],['event','Jenis acara','text','mis. Syukuran kantor'],['pax','Perkiraan pax','number','100'],['date','Tanggal acara','date','']].map(([k,l,t,ph])=>({label:l,type:t,ph,value:lf[k]||'',onChange:setLf(k)}));
+    const lfSources=['WhatsApp','Website','Instagram','Referral','Manual'].map(x=>{const st=sel(lf.source===x);return {label:x,bg:st.bg,border:st.border,fg:st.fg,onClick:()=>this.setState({lf:{...lf,source:x}})};});
+    const saveLead=()=>{if(!lf.name){this.flash('Nama kontak wajib diisi.','err');return;}const pax=+lf.pax||50;const nl={id:'L'+(s.leads.length+1)+'x',name:lf.name,company:lf.company||'Pribadi',phone:lf.phone||'—',source:lf.source,event:lf.event||'Acara',pax,date:lf.date||'2026-12-10',budget:35000,stage:'New Lead',sales:'Dimas Arya',score:Math.min(95,40+Math.round(pax/10)),loc:'—',acts:[{t:'24 Nov',x:'Lead dibuat manual · sumber '+lf.source}]};this.setState({leads:[...s.leads,nl],lf:null});this.wa('lead',nl.name,'sambutan_lead','Halo '+nl.name+', terima kasih sudah menghubungi Dapur Lestari Catering!');this.flash('Lead '+nl.name+' ditambahkan & di-assign ke Dimas Arya.');};
+
+    return {
+      navGroups,is,hasAlerts:totalAct>0,alertCount:totalAct,
+      goWa:()=>this.go('wa'),goDash:()=>this.go('dash'),goPipe:()=>this.go('pipe'),goInv:()=>this.go('inv'),goCalendar:()=>this.go('order',{orderView:'cal'}),
+      heroSub:todayList.filter(o=>o.date==='2026-11-24').length+' pengiriman hari ini · pipeline terbuka senilai '+short(pipeVal)+' dari '+openLeads.length+' lead.',
+      openNewLead:()=>this.setState({lf:{source:'WhatsApp',date:'2026-12-10'}}),newQuote:()=>this.openQuote(),
+      actionCards,actionSummary:totalAct?totalAct+' item menunggu keputusan Anda':'✓ Semua beres',actionColor:totalAct?'#9a6200':'#1f6b2b',
+      kpis:[{label:'Revenue November',value:short(revNov),sub:'+18% vs Oktober',subFg:'#1f6b2b'},{label:'Gross profit',value:short(revNov-costNov),sub:'margin '+Math.round((1-costNov/Math.max(1,revNov))*100)+'%',subFg:'#1f6b2b'},{label:'Piutang',value:short(piutang),sub:dpPending.length+' invoice belum dibayar',subFg:'#8f2a1c'},{label:'Order aktif',value:String(live.filter(o=>o.status!=='Completed').length),sub:'repeat order 42%',subFg:'#6b6f66'}],
+      todayRows:todayList.map(row),todaySub:todayList.length+' order · '+todayList.reduce((a,o)=>a+o.pax,0)+' pax',funnel,convRate:Math.round(won/Math.max(1,s.leads.length)*100)+'%',
+      columns:cols,custRows,pkgCards,quoteRows,qb,leadOptions,backToQuotes:()=>this.setState({quoteMode:'list'}),
+      capLabel:CAP,viewTabs,isOrderList:s.orderView==='list',isOrderCal:s.orderView==='cal',filterChips,orderRows,cal,
+      prodList,noProd:!prodOrders.length,hasPs:!!psO,ps,
+      invRows,prRows,noPr:!s.prs.length,hasShort:shortItems.length>0,shortCount:shortItems.length,makePR,
+      finKpis,invoiceRows,profitRows,msgRows,tplRows,
+      hasLd:!!L,ld,hasOd:!!O,od,closeDrawer:()=>this.setState({selLead:null,selOrder:null}),
+      note:s.note,onNote:e=>this.setState({note:e.target.value}),addNote:()=>{if(!s.note.trim())return;this.upLead(L.id,{},s.note.trim());this.setState({note:''});},
+      hasPay:!!PO,pay,closePay:()=>this.setState({pay:null}),
+      hasLf:!!s.lf,lfFields,lfSources,closeLf:()=>this.setState({lf:null}),saveLead,
+      hasToast:!!s.toast,toastMsg:s.toast?s.toast.msg:'',toastBg:s.toast?({err:'#8f2a1c',warn:'#8a5a00'}[s.toast.tone]||'#17521f'):'#17521f'
+    };
+  }
+}
+</script>
+</body>
+</html>
